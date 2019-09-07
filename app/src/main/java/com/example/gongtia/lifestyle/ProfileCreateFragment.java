@@ -1,12 +1,14 @@
 package com.example.gongtia.lifestyle;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.FileProvider;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +20,20 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.ybs.countrypicker.CountryPicker;
 import com.ybs.countrypicker.CountryPickerListener;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -30,32 +41,29 @@ import static android.app.Activity.RESULT_OK;
 public class ProfileCreateFragment extends Fragment implements View.OnClickListener{
 
     //    parsed data:
-    private String mUserName, mAge, mCity, mCountry, mHeight, mWeight, profilePhotoPath;
+    private String mUserName, mAge, mSex, mCity, mCountry, mHeight, mWeight, profilePhotoPath;
 
 //    define UI componets:
     private EditText  etUserName, etAge, etCity, etHeight, etWeight;
     private RadioGroup rgSex;
     private RadioButton rbSex;
-    private Button mbtCreate, mbtCountry, mbtShowBMI;
+    private Button mbtCreate, mbtCountry;
     private ImageButton mbtCamera;
     private ImageView mProfilePic;
-    private TextView tv_showBMI;
 
     //Define a request code for the camera
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    //Define a bitmap
-    Bitmap mThumbnailImage;
+
+    private User mUserProfile = new User();
+
 
     private double weight, height;
+
+    private DatabaseReference mDatabase;
 
     public ProfileCreateFragment() {
         // Required empty public constructor
     }
-
-    public interface OnDataPass{
-        public void onDataPass(String[] data);
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,10 +97,12 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
 
         mProfilePic = (ImageView) view.findViewById(R.id.iv_profile);
 
-        mbtShowBMI = view.findViewById(R.id.button_showBMI);
-        mbtShowBMI.setOnClickListener(this);
+//        mbtShowBMI = view.findViewById(R.id.button_showBMI);
+//        mbtShowBMI.setOnClickListener(this);
+//
+//        tv_showBMI = (TextView) view.findViewById(R.id.tv_showBMI);
 
-        tv_showBMI = (TextView) view.findViewById(R.id.tv_showBMI);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         return view;
 
@@ -103,12 +113,7 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.button_camera:{
-//                TODO: Take Pic intent:
-                //The button press should open a camera
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if(cameraIntent.resolveActivity(getActivity().getPackageManager())!=null){
-                    startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-                }
+                dispatchTakePictureIntent();
                 break;
             }
 
@@ -116,15 +121,12 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
                 showCountry();
                 break;
             }
-
-            case R.id.button_showBMI:{
-                if(validateBMIInput()){
-                    showBMI();
-                }
-                break;
-            }
             case R.id.button_create_profile:{
-                validateInput();
+                if(validateInput()){
+                    storeUserProfile();
+                    Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
+                    startActivity(homeIntent);
+                }
                 break;
             }
         }
@@ -134,9 +136,8 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode==REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
-            Bundle extras = data.getExtras();
-            Bitmap thumbnailImage = (Bitmap) extras.get("data");
-            mProfilePic.setImageBitmap(thumbnailImage);
+            mProfilePic = getActivity().findViewById(R.id.iv_profile);
+            mProfilePic.setImageBitmap(BitmapFactory.decodeFile(profilePhotoPath));
         }
     }
 
@@ -155,34 +156,34 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
     }
 
 
-    private boolean validateBMIInput(){
-        if(TextUtils.isEmpty(etWeight.getText())){
-            etWeight.setError("Weight is Required");
-            return false;
-        }
-        if(TextUtils.isEmpty(etHeight.getText())){
-            etHeight.setError("Height is Required");
-            return false;
-        }
-        mWeight = etWeight.getText().toString();
-        mHeight = etHeight.getText().toString();
-        weight = Double.parseDouble(mWeight);
-        height = Double.parseDouble(mHeight);
-        if(weight <= 0 || weight >= 2000){
-            etWeight.setError("Weight not Valid");
-            return false;
-        }
-        if(height <=0 || height >= 200){
-            etHeight.setError("Height not Valid");
-            return false;
-        }
-        return true;
-    }
+//    private boolean validateBMIInput(){
+//        if(TextUtils.isEmpty(etWeight.getText())){
+//            etWeight.setError("Weight is Required");
+//            return false;
+//        }
+//        if(TextUtils.isEmpty(etHeight.getText())){
+//            etHeight.setError("Height is Required");
+//            return false;
+//        }
+//        mWeight = etWeight.getText().toString();
+//        mHeight = etHeight.getText().toString();
+//        weight = Double.parseDouble(mWeight);
+//        height = Double.parseDouble(mHeight);
+//        if(weight <= 0 || weight >= 2000){
+//            etWeight.setError("Weight not Valid");
+//            return false;
+//        }
+//        if(height <=0 || height >= 200){
+//            etHeight.setError("Height not Valid");
+//            return false;
+//        }
+//        return true;
+//    }
 
-    private void showBMI(){
-        double bmi = 703 * weight/(height * height);
-        tv_showBMI.setText("" + new DecimalFormat("#.##").format(bmi));
-    }
+//    private void showBMI(){
+//        double bmi = 703 * weight/(height * height);
+//        tv_showBMI.setText("" + new DecimalFormat("#.##").format(bmi));
+//    }
 
     private boolean validateInput(){
         mUserName = etUserName.getText().toString();
@@ -190,6 +191,7 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         mWeight = etWeight.getText().toString();
         mAge = etAge.getText().toString();
         mCity = etCity.getText().toString();
+        mSex = rbSex.getText().toString();
 
         if(mUserName.matches("")){
             etUserName.setError("User Name is Required");
@@ -213,7 +215,81 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
             mbtCountry.setError("Country is Required");
         }
 
+        if(TextUtils.isEmpty(etWeight.getText())){
+            etWeight.setError("Weight is Required");
+            return false;
+        }
+        if(TextUtils.isEmpty(etHeight.getText())){
+            etHeight.setError("Height is Required");
+            return false;
+        }
+        mWeight = etWeight.getText().toString();
+        mHeight = etHeight.getText().toString();
+        weight = Double.parseDouble(mWeight);
+        height = Double.parseDouble(mHeight);
+        if(weight <= 0 || weight >= 2000){
+            etWeight.setError("Weight not Valid");
+            return false;
+        }
+        if(height <=0 || height >= 200){
+            etHeight.setError("Height not Valid");
+            return false;
+        }
+
         return true;
     }
+
+    private File createImageFile() throws IOException {
+        // Create the profile image file name.
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName,".jpg", storageDir);
+        profilePhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getActivity(), "com.example.gongtia.lifestyle", photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+
+    private void storeUserProfile(){
+//      name and age
+        mUserProfile.setUserName(mUserName);
+        int age = Integer.parseInt(mAge);
+        mUserProfile.setAge(age);
+        mUserProfile.setSex(mSex);
+//        location
+        mUserProfile.setCity(mCity);
+        mUserProfile.setCountry(mCountry);
+//        health data
+        double height = Double.parseDouble(mHeight);
+        mUserProfile.setHeight(height);
+        double weight = Double.parseDouble(mWeight);
+        mUserProfile.setWeight(weight);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        mUserProfile.setUid(user.getUid());
+        mDatabase.child(user.getUid()).setValue(mUserProfile);
+
+    }
+
 
 }

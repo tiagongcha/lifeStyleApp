@@ -1,19 +1,16 @@
 package com.example.gongtia.lifestyle;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 public class HomeActivity extends AppCompatActivity {
-    private final Fragment goalFragment = new GoalFragment();
-    private final Fragment profileCreateFragment = new ProfileCreateFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +27,17 @@ public class HomeActivity extends AppCompatActivity {
             Fragment selectedFragment = null;
 
             switch (menuItem.getItemId()){
+                case R.id.nav_Home:
+                    Intent homeIntent = new Intent(HomeActivity.this, HomeActivity.class);
+                    startActivity(homeIntent);
+                    break;
+
                 case R.id.nav_goal:
                     selectedFragment = new GoalFragment();
                     break;
 
                 case R.id.nav_profile:
-                    selectedFragment = new ProfileCreateFragment();
+                    selectedFragment = new ProfileFragment();
                     break;
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,

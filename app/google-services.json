@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "39665166485",
+    "firebase_url": "https://lifestyle-de075.firebaseio.com",
+    "project_id": "lifestyle-de075",
+    "storage_bucket": "lifestyle-de075.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39665166485:android:43fa67ef7ccf070891939c",
+        "android_client_info": {
+          "package_name": "com.example.gongtia.lifestyle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "39665166485-ts09b52q86tja084o8l71gb59brr5b7i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADvfhq5u4_7A2VSEZIAQf8dxmVuq2nmeU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "39665166485-ts09b52q86tja084o8l71gb59brr5b7i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
