@@ -34,14 +34,16 @@ public class HomeActivity extends AppCompatActivity {
 
                 case R.id.nav_goal:
                     selectedFragment = new GoalFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            selectedFragment).commit();
                     break;
 
                 case R.id.nav_profile:
                     selectedFragment = new ProfileFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            selectedFragment).commit();
                     break;
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    selectedFragment).commit();
             return true;
         }
     };

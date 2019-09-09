@@ -1,11 +1,14 @@
 package com.example.gongtia.lifestyle;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.FileProvider;
@@ -20,15 +23,23 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.ybs.countrypicker.CountryPicker;
 import com.ybs.countrypicker.CountryPickerListener;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -40,10 +51,14 @@ import static android.app.Activity.RESULT_OK;
 
 public class ProfileCreateFragment extends Fragment implements View.OnClickListener{
 
-    //    parsed data:
-    private String mUserName, mAge, mSex, mCity, mCountry, mHeight, mWeight, profilePhotoPath;
 
-//    define UI componets:
+    private String mUserName, mAge, mSex, mCity, mCountry, mHeight, mWeight;
+
+    private Uri url;
+    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
+
+    //    define UI componets:
     private EditText  etUserName, etAge, etCity, etHeight, etWeight;
     private RadioGroup rgSex;
     private RadioButton rbSex;
@@ -55,7 +70,6 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private User mUserProfile = new User();
-
 
     private double weight, height;
 
@@ -97,11 +111,6 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
 
         mProfilePic = (ImageView) view.findViewById(R.id.iv_profile);
 
-//        mbtShowBMI = view.findViewById(R.id.button_showBMI);
-//        mbtShowBMI.setOnClickListener(this);
-//
-//        tv_showBMI = (TextView) view.findViewById(R.id.tv_showBMI);
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         return view;
@@ -136,9 +145,41 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode==REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
-            mProfilePic = getActivity().findViewById(R.id.iv_profile);
-            mProfilePic.setImageBitmap(BitmapFactory.decodeFile(profilePhotoPath));
+            Bundle extras = data.getExtras();
+            Bitmap thumbnailImage = (Bitmap) extras.get("data");
+            uploadImageAndSaveUri(thumbnailImage);
         }
+    }
+
+    private void uploadImageAndSaveUri(Bitmap thumbnailImage) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        StorageReference photoRef = storageRef.child("pics/" + uid);
+        thumbnailImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = photoRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+                Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
+                while(!uri.isComplete());
+                url = uri.getResult();
+
+                mProfilePic.setImageBitmap(thumbnailImage);
+
+                Toast.makeText(getActivity(), "Upload Success, download URL " +
+                        url.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void showCountry(){
@@ -155,30 +196,6 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
     }
 
-
-//    private boolean validateBMIInput(){
-//        if(TextUtils.isEmpty(etWeight.getText())){
-//            etWeight.setError("Weight is Required");
-//            return false;
-//        }
-//        if(TextUtils.isEmpty(etHeight.getText())){
-//            etHeight.setError("Height is Required");
-//            return false;
-//        }
-//        mWeight = etWeight.getText().toString();
-//        mHeight = etHeight.getText().toString();
-//        weight = Double.parseDouble(mWeight);
-//        height = Double.parseDouble(mHeight);
-//        if(weight <= 0 || weight >= 2000){
-//            etWeight.setError("Weight not Valid");
-//            return false;
-//        }
-//        if(height <=0 || height >= 200){
-//            etHeight.setError("Height not Valid");
-//            return false;
-//        }
-//        return true;
-//    }
 
 //    private void showBMI(){
 //        double bmi = 703 * weight/(height * height);
@@ -239,35 +256,14 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         return true;
     }
 
-    private File createImageFile() throws IOException {
-        // Create the profile image file name.
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName,".jpg", storageDir);
-        profilePhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(getActivity(), "com.example.gongtia.lifestyle", photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
-    }
+
 
 
     private void storeUserProfile(){
