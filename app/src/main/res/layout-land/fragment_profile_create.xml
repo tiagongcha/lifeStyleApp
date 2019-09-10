@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true"
+    android:overScrollMode="ifContentScrolls"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="30dp"
+        tools:context=".fragment.ProfileEnterFrag">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="329dp"
+            android:layout_height="523dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="3dp"
+            app:cardPreventCornerOverlap="false">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/linear1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <!--TODO: CHANGE IMage button and image view-->
+                    <ImageButton
+                        android:id="@+id/button_camera"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="19dp"
+                        android:background="@drawable/circle"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_person_black_24dp"
+                        android:tint="@color/white" />
+
+                    <ImageView
+                        android:id="@+id/iv_profile"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="right"
+                        android:background="@drawable/circle"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_person_black_24dp"
+                        android:tint="@color/white" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_below="@+id/linear1"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="-14dp"
+                    android:rotation="45"
+                    android:src="@drawable/square" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_userName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageView1"
+                    >
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tl_userName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true">
+                        <EditText
+                            android:id="@+id/et_userName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="UserName"
+                            android:inputType="text"
+                            android:textSize="20sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rl_userName">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tl_age"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true">
+                        <EditText
+                            android:id="@+id/et_age"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="Age"
+                            android:inputType="text"
+                            android:textSize="20sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_sex"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rl_age">
+                    <RadioGroup
+                        android:id="@+id/rg_sex"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        tools:layout_editor_absoluteX="30dp"
+                        tools:layout_editor_absoluteY="132dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Gender: "
+                            android:textSize="20sp" />
+
+                        <RadioButton
+                            android:id="@+id/male"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:checked="true"
+                            android:text="Male"
+                            android:textSize="20sp" />
+
+                        <RadioButton
+                            android:id="@+id/female"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:text="Female"
+                            android:textSize="20sp" />
+                    </RadioGroup>
+                </RelativeLayout>
+
+               <RelativeLayout
+                   android:id="@+id/rl_location"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/rl_sex">
+                   <LinearLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:orientation="horizontal">
+                       <RelativeLayout
+                           android:id="@+id/rl_city"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_gravity="left">
+                           <com.google.android.material.textfield.TextInputLayout
+                               android:id="@+id/tl_city"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:focusable="true"
+                               android:focusableInTouchMode="true">
+                               <EditText
+                                   android:id="@+id/et_city"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="wrap_content"
+                                   android:ems="10"
+                                   android:hint="City"
+                                   android:inputType="text"
+                                   android:textSize="20sp" />
+                           </com.google.android.material.textfield.TextInputLayout>
+                       </RelativeLayout>
+
+                       <RelativeLayout
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_alignParentTop="true"
+                           android:layout_gravity="right">
+                           <TextView
+                               android:id="@+id/tv_country"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:gravity="top"
+                               android:text="Country"
+                               android:textSize="20dp"
+                               android:paddingBottom="3dp"/>
+                           <!--TODO: fix UI of country-->
+                           <Button
+                               android:id="@+id/button_country"
+                               android:gravity="bottom"
+                               android:layout_width="30dp"
+                               android:layout_height="30dp"
+                               android:layout_marginStart="8dp"
+                               android:layout_marginLeft="8dp"
+                               android:layout_marginTop="16dp"
+                               android:layout_marginEnd="88dp"
+                               android:layout_marginRight="88dp"
+                               android:background="@android:drawable/btn_dropdown" />
+                       </RelativeLayout>
+                   </LinearLayout>
+               </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_heightWeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rl_location">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left">
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tl_height"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                tools:layout_editor_absoluteX="60dp"
+                                tools:layout_editor_absoluteY="217dp">
+
+                                <EditText
+                                    android:id="@+id/et_height"
+                                    android:layout_width="178dp"
+                                    android:layout_height="wrap_content"
+                                    android:ems="10"
+                                    android:hint="Height in Inches"
+                                    android:inputType="text"
+                                    android:textSize="20sp" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right">
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/tl_weight"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                tools:layout_editor_absoluteX="60dp"
+                                tools:layout_editor_absoluteY="217dp">
+
+                                <EditText
+                                    android:id="@+id/et_weight"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:ems="10"
+                                    android:hint="Weight in Inches"
+                                    android:inputType="text"
+                                    android:textSize="20sp" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </RelativeLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+                <!--TODO: display BMI is really ugly-->
+                <RelativeLayout
+                    android:id="@+id/rl_bmi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rl_heightWeight">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left">
+                            <Button
+                                android:id="@+id/button_showBMI"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ShowBMI"
+                                android:background="@color/colorPrimary"
+                                android:fontFamily="sans-serif-medium"
+                                android:textColor="@color/white"/>
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right">
+                            <TextView
+                                android:id="@+id/tv_showBMI"
+                                android:layout_width="93dp"
+                                android:layout_height="40dp"
+                                tools:layout_editor_absoluteX="115dp"
+                                tools:layout_editor_absoluteY="387dp" />
+
+                        </RelativeLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/button_create_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rl_bmi"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/colorPrimary"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="SIGN UP"
+                    android:textColor="@color/white" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

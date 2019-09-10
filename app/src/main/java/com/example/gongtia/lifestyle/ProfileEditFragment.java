@@ -5,13 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.FileProvider;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.RadioButton;
-import android.widget.TextView;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,61 +23,55 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ybs.countrypicker.CountryPicker;
 import com.ybs.countrypicker.CountryPickerListener;
 
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import static android.app.Activity.RESULT_OK;
 
+public class ProfileEditFragment extends Fragment implements View.OnClickListener {
 
-public class ProfileCreateFragment extends Fragment implements View.OnClickListener{
-
-
-    private String mUserName, mAge, mSex, mCity, mCountry, mHeight, mWeight;
-
-    private Uri url;
-    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-
+    private String mUserName, mAge, mSex, mCity, mCountry, mHeight, mWeight, profilePhotoPath;
 
     //    define UI componets:
-    private EditText  etUserName, etAge, etCity, etHeight, etWeight;
+    private EditText etUserName, etAge, etCity, etHeight, etWeight;
     private RadioGroup rgSex;
     private RadioButton rbSex;
-    private Button mbtCreate, mbtCountry;
+    private Button mbtUpdate, mbtCountry;
     private ImageButton mbtCamera;
     private ImageView mProfilePic;
+
+    private double weight, height;
+    private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
     //Define a request code for the camera
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    private User mUserProfile = new User();
+    private DatabaseReference mProfileReference;
+    private FirebaseAuth mAuth;
+    private String userId;
+    private Uri url;
 
-    private double weight, height;
-
-    private DatabaseReference mDatabase;
-
-    public ProfileCreateFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_profile_create, container, false);
+        final View view = inflater.inflate(R.layout.fragment_profile_edit, container, false);
         etUserName = view.findViewById(R.id.et_userName);
         etAge = view.findViewById(R.id.et_age);
         etCity = view.findViewById(R.id.et_city);
@@ -100,8 +87,8 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
             }
         });
 
-        mbtCreate = view.findViewById(R.id.button_create_profile);
-        mbtCreate.setOnClickListener(this);
+        mbtUpdate = view.findViewById(R.id.button_update_profile);
+        mbtUpdate.setOnClickListener(this);
 
         mbtCountry = view.findViewById(R.id.button_country);
         mbtCountry.setOnClickListener(this);
@@ -111,12 +98,33 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
 
         mProfilePic = (ImageView) view.findViewById(R.id.iv_profile);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        mProfileReference = FirebaseDatabase.getInstance().getReference();
+        FirebaseUser user = mAuth.getCurrentUser();
+        userId = user.getUid();
 
+        ValueEventListener mListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                populateDate(dataSnapshot);
+                loadProfilePic();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+        mProfileReference.addValueEventListener(mListener);
         return view;
-
     }
 
+    private void populateDate(@NonNull DataSnapshot dataSnapshot) {
+        etUserName.setText(dataSnapshot.child(userId).getValue(User.class).getUserName());
+        etAge.setText("" + dataSnapshot.child(userId).getValue(User.class).getAge());
+        etCity.setText(dataSnapshot.child(userId).getValue(User.class).getCity());
+        etHeight.setText("" + dataSnapshot.child(userId).getValue(User.class).getHeight());
+        etWeight.setText("" + dataSnapshot.child(userId).getValue(User.class).getWeight());
+    }
 
     @Override
     public void onClick(View view) {
@@ -130,9 +138,9 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
                 showCountry();
                 break;
             }
-            case R.id.button_create_profile:{
+            case R.id.button_update_profile:{
                 if(validateInput()){
-                    storeUserProfile();
+                    updateUserProfile();
                     Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
                     startActivity(homeIntent);
                 }
@@ -142,47 +150,24 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode==REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
-            Bundle extras = data.getExtras();
-            Bitmap thumbnailImage = (Bitmap) extras.get("data");
-            uploadImageAndSaveUri(thumbnailImage);
-        }
+    private void updateUserProfile() {
+        DatabaseReference curRef = mProfileReference.child(userId);
+        curRef.child("userName").setValue(mUserName);
+
+        int age = Integer.parseInt(mAge);
+        curRef.child("age").setValue(age);
+
+        curRef.child("city").setValue(mCity);
+        curRef.child("country").setValue(mCountry);
+        curRef.child("sex").setValue(mSex);
+
+        double height = Double.parseDouble(mHeight);
+        double weight = Double.parseDouble(mWeight);
+        curRef.child("height").setValue(height);
+        curRef.child("weight").setValue(weight);
     }
 
-    private void uploadImageAndSaveUri(Bitmap thumbnailImage) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        StorageReference photoRef = storageRef.child("pics/" + uid);
-        thumbnailImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        UploadTask uploadTask = photoRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                // ...
-                Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
-                while(!uri.isComplete());
-                url = uri.getResult();
-
-                mProfilePic.setImageBitmap(thumbnailImage);
-
-                Toast.makeText(getActivity(), "Upload Success, download URL " +
-                        url.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    private void showCountry(){
+    private void showCountry() {
         final CountryPicker picker = CountryPicker.newInstance("Select Country");  // dialog title
         picker.setListener(new CountryPickerListener() {
             @Override
@@ -196,11 +181,25 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
     }
 
+    private void loadProfilePic() {
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        StorageReference ProfileRef = storageRef.child("pics").child(uid);
+        final long ONE_MEGABYTE = 1024 * 1024;
 
-//    private void showBMI(){
-//        double bmi = 703 * weight/(height * height);
-//        tv_showBMI.setText("" + new DecimalFormat("#.##").format(bmi));
-//    }
+        ProfileRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Data for "images/island.jpg" is returns, use this as needed
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                mProfilePic.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+    }
 
     private boolean validateInput(){
         mUserName = etUserName.getText().toString();
@@ -260,32 +259,48 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
-
-
-
-    private void storeUserProfile(){
-//      name and age
-        mUserProfile.setUserName(mUserName);
-        int age = Integer.parseInt(mAge);
-        mUserProfile.setAge(age);
-        mUserProfile.setSex(mSex);
-//        location
-        mUserProfile.setCity(mCity);
-        mUserProfile.setCountry(mCountry);
-//        health data
-        double height = Double.parseDouble(mHeight);
-        mUserProfile.setHeight(height);
-        double weight = Double.parseDouble(mWeight);
-        mUserProfile.setWeight(weight);
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        mUserProfile.setUid(user.getUid());
-        mDatabase.child(user.getUid()).setValue(mUserProfile);
-
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode==REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
+            Bundle extras = data.getExtras();
+            Bitmap thumbnailImage = (Bitmap) extras.get("data");
+            uploadImageAndSaveUri(thumbnailImage);
+        }
+    }
+
+    private void uploadImageAndSaveUri(Bitmap thumbnailImage) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        StorageReference photoRef = storageRef.child("pics/" + uid);
+        thumbnailImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = photoRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+                Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
+                while(!uri.isComplete());
+                url = uri.getResult();
+
+                mProfilePic.setImageBitmap(thumbnailImage);
+
+                Toast.makeText(getActivity(), "Upload Success, download URL " +
+                        url.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
 }

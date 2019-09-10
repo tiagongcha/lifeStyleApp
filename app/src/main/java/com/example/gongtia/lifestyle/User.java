@@ -1,11 +1,19 @@
 package com.example.gongtia.lifestyle;
 
-public class Profile {
-    private String userName, city, country;
+public class User {
+    private String id;//key
+    private String userName, city, country, sex;
     private int age;
     private double height, weight;
-    private boolean isMale;
 
+
+    public User(){
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
+    }
+
+    public void setUid(String uid){
+        this.id = uid;
+    }
     public void setUserName(String userName){
         this.userName = userName;
     }
@@ -22,8 +30,8 @@ public class Profile {
         this.age = age;
     }
 
-    public void setSex(boolean isMale){
-        this.isMale = isMale;
+    public void setSex(String sex){
+        this.sex = sex;
     }
 
     public void setHeight(double height){
@@ -38,6 +46,8 @@ public class Profile {
         return this.userName;
     }
 
+    public String getUid(){return this.id;}
+
     public String getCity(){
         return this.city;
     }
@@ -50,8 +60,8 @@ public class Profile {
         return this.age;
     }
 
-    public boolean getSex(){
-        return this.isMale;
+    public String getSex(){
+        return this.sex;
     }
 
     public double getHeight(){
