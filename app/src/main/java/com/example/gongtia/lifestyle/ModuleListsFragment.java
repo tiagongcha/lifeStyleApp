@@ -37,12 +37,8 @@ public class ModuleListsFragment extends Fragment {
         m_RecyclerView.setLayoutManager(layoutManager);
 
         ArrayList<ModuleButton> buttons = new ArrayList<>();
-        buttons.add(new ModuleButton(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_goal_all_black_24dp, null), "FITNESS"));
-        buttons.add(new ModuleButton(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_goal_all_black_24dp, null), "HIKING"));
         buttons.add(new ModuleButton(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_goal_all_black_24dp, null), "Weather"));
-        buttons.add(new ModuleButton(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_goal_all_black_24dp, null), "Placeholder"));
-
-
+        buttons.add(new ModuleButton(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_goal_all_black_24dp, null), "HIKING"));
         m_Adaptor = new MyRVAdapter(buttons);
 
         if(!getResources().getBoolean(R.bool.isTablet)){

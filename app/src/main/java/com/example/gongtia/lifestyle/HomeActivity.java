@@ -7,7 +7,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.MenuItem;
@@ -83,15 +82,15 @@ public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnAda
     }
 
     private void hikingButtonHandler() {
-        Fragment selectedFragment = new GoalFragment();
+        Fragment hikingFragment = new MapFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.main_container,
-                selectedFragment).commit();
+                hikingFragment).commit();
     }
 
     private void weatherButtonHandler() {
-        Fragment selectedFragment = new GoalFragment();
+        Fragment weatherFragment = new WeatherButtonFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.main_container,
-                selectedFragment).commit();
+                weatherFragment).commit();
     }
 
     private boolean isWideDisplay() {
