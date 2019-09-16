@@ -1,13 +1,246 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/holo_blue_bright">
 
-    <TextView
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:id="@+id/linear_WH"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="GOAL"
-        android:textSize="30dp"/>
+        android:layout_marginTop="32dp"
+        tools:context=".MainActivity" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:text="Weight: "
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/textView_Weight"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="80KG"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="80dp"
+            android:layout_marginLeft="80dp"
+            android:text="Height: "
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/textView_Height"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="180cm"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_Goal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_WH"
+        tools:context=".MainActivity" >
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:text="Goal: "
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/textView_Goal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="75Kg"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="80dp"
+            android:layout_marginLeft="80dp"
+            android:text="To Do: "
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/textView_ToDo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="-5kg"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_Change"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_Goal"
+        tools:context=".MainActivity" >
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="8dp"
+            android:text="Change Goal"
+            android:textSize="18sp"/>
+
+        <EditText
+            android:id="@+id/editText_Change"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="textPersonName"
+            android:text=""
+            android:textSize="18sp"/>
+
+        <Button
+            android:id="@+id/button_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
+            android:layout_marginRight="40dp"
+            android:text="Submit"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_Active"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_Change"
+        tools:context=".MainActivity" >
+
+        <Spinner
+            android:id="@+id/spinner_active"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginRight="40dp"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linear_Current1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        android:layout_below="@id/linear_Active"
+        tools:context=".MainActivity" >
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:text="Current BMR: "
+        android:textSize="24sp" />
+    <TextView
+        android:id="@+id/textView_current_BMR"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="2443"
+        android:textSize="24sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linear_Current2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/linear_Current1"
+        tools:context=".MainActivity" >
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:text="Current Caloric Needed: "
+            android:textSize="24sp" />
+        <TextView
+            android:id="@+id/textView_current_caloric"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="2890"
+            android:textSize="24sp" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linear_Goal1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_below="@id/linear_Current2"
+        tools:context=".MainActivity" >
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:text="Goal BMR: "
+            android:textSize="24sp" />
+        <TextView
+            android:id="@+id/textView_Goal_BMR"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="2143"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_Goal2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/linear_Goal1"
+        tools:context=".MainActivity" >
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:text="Goal Caloric Needed: "
+            android:textSize="24sp" />
+        <TextView
+            android:id="@+id/textView_goal_caloric"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="2690"
+            android:textSize="24sp" />
+
+    </LinearLayout>
 
 </RelativeLayout>
