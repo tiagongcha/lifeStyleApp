@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.view.MenuItem;
 
-public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnAdapterDataChannel{
+public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnPositionPasser{
 
     private FragmentTransaction m_fTrans;
 
@@ -34,7 +34,7 @@ public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnAda
         }else{
 //            tablet version:
             m_fTrans.replace(R.id.fl_master_wd, new ModuleListsFragment());
-            m_fTrans.replace(R.id.fl_detail_wd, new GoalFragment());
+            m_fTrans.replace(R.id.fl_detail_wd, new GoalCreateFragment());
             m_fTrans.addToBackStack(null);
             m_fTrans.commit();
         }
@@ -72,10 +72,10 @@ public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnAda
     public void onAdapterDataPass(int position) {
         switch (position) {
             case 0:
-                hikingButtonHandler();
+                weatherButtonHandler();
                 break;
             case 1:
-                weatherButtonHandler();
+                hikingButtonHandler();
                 break;
 
         }
@@ -88,9 +88,11 @@ public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnAda
     }
 
     private void weatherButtonHandler() {
-        Fragment weatherFragment = new WeatherButtonFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_container,
-                weatherFragment).commit();
+//        Fragment weatherFragment = new WeatherButtonFragment();
+////        getSupportFragmentManager().beginTransaction().replace(R.id.main_container,
+////                weatherFragment).commit();
+        Intent weatherIntent = new Intent(this, WeatherActivity.class);
+        startActivity(weatherIntent);
     }
 
     private boolean isWideDisplay() {

@@ -38,11 +38,11 @@ public class ModuleListsFragment extends Fragment {
 
         ArrayList<ModuleButton> buttons = new ArrayList<>();
         buttons.add(new ModuleButton(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_goal_all_black_24dp, null), "Weather"));
-        buttons.add(new ModuleButton(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_goal_all_black_24dp, null), "HIKING"));
+        buttons.add(new ModuleButton(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_goal_all_black_24dp, null), "Hiking"));
         m_Adaptor = new MyRVAdapter(buttons);
 
         if(!getResources().getBoolean(R.bool.isTablet)){
-            m_RecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+            m_RecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         }
         m_RecyclerView.setAdapter(m_Adaptor);
         return view;

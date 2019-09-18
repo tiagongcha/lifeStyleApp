@@ -34,6 +34,8 @@
         <activity android:name=".RegistrationActivity"/>
         <activity android:name=".ProfileEditActivity"/>
         <activity android:name=".WeatherActivity"/>
+        <activity android:name=".GoalCreateActivity"/>
+        <activity android:name=".GoalEditActivity"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

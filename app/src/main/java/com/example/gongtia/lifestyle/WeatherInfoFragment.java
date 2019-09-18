@@ -16,10 +16,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.StrictMode;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,21 +44,24 @@ import static androidx.core.content.ContextCompat.getSystemService;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class weatherInfoFragment extends Fragment {
+public class WeatherInfoFragment extends Fragment {
     String cityName, stateName, countryName;
     String temprature, minTemprature, maxTemprature;
     String description, snow, windSpeed, winDirection;
     String date;
-    String weatherInfo;
-    ;
-    private TextView weatherInfoTV;
+    String weatherCode;
+    TextView dateTV, siteTV, descriptionTV, temperatureTV;
+    ImageView im;
+    HashMap<String, String> meMap = new HashMap<String, String>();
 
-    public weatherInfoFragment() {
+    public WeatherInfoFragment() {
         // Required empty public constructor
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         String serviceString = Context.LOCATION_SERVICE;
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(serviceString);
@@ -75,6 +81,7 @@ public class weatherInfoFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        setWeatherCode_Icon();
 //        Toast.makeText(getActivity(),weatherInfo,Toast.LENGTH_SHORT).show();
     }
 
@@ -83,13 +90,15 @@ public class weatherInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_weather_info, container, false);
+
+
         return view;
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TextView text = view.findViewById(R.id.wiText);
-        text.setText(weatherInfo);
+        setText(view);
     }
 
     void getWeather(Location location) throws IOException, JSONException {
@@ -146,7 +155,7 @@ public class weatherInfoFragment extends Fragment {
         stateName = weatherRoot.optString("state_code");
 
         JSONObject current = (JSONObject) arrData.get(0);
-        if(current ==null) {
+        if (current == null) {
             return;
         }
         date = current.optString("valid_date");
@@ -154,17 +163,75 @@ public class weatherInfoFragment extends Fragment {
         maxTemprature = current.optString("max_temp");
         minTemprature = current.optString("min_temp");
         snow = current.optString("snow");
-        JSONObject weatherDes= current.getJSONObject("weather");
+        JSONObject weatherDes = current.getJSONObject("weather");
         description = weatherDes.optString("description");
+        weatherCode = weatherDes.optString("code");
         winDirection = current.optString("wind_cdir_full");
         windSpeed = current.optString("wind_spd") + "m/s";
 
-        weatherInfo ="Date:" + date + "\n" +"City:" + cityName + "\n"  +
-                "Description:"+ description + "\n" +"Temprature:" + temprature +"\n" +
-                "MaxTemp:" + maxTemprature +  "\n" + "MinTemp:" +minTemprature +  "\n"
-                +"WindSpeed:" + windSpeed  + "\n" + "WindDiretion:"+ winDirection;
+//        weatherInfo ="Date:" + date + "\n" +"City:" + cityName + "\n"  +
+//                "Description:"+ description + "\n" +"Temprature:" + temprature +"\n" +
+//                "MaxTemp:" + maxTemprature +  "\n" + "MinTemp:" +minTemprature +  "\n"
+//                +"WindSpeed:" + windSpeed  + "\n" + "WindDiretion:"+ winDirection;
 
         //        Toast.makeText(this, weatherInfo, Toast.LENGTH_SHORT).show();
         return;
+    }
+
+    public void setWeatherCode_Icon() {
+        meMap.put("200", "t01d");
+        meMap.put("201", "t01d");
+        meMap.put("202", "t01d");
+        meMap.put("230", "t04d");
+        meMap.put("231", "t04d");
+        meMap.put("232", "t04d");
+        meMap.put("233", "t04d");
+        meMap.put("300", "d01d");
+        meMap.put("301", "d01d");
+        meMap.put("302", "d01d");
+        meMap.put("500", "r01d");
+        meMap.put("501", "r01d");
+        meMap.put("502", "r03d");
+        meMap.put("511", "r04d");
+        meMap.put("520", "r04d");
+        meMap.put("521", "r05d");
+        meMap.put("522", "r04d");
+        meMap.put("600", "s01d");
+        meMap.put("601", "s02d");
+        meMap.put("602", "s02d");
+        meMap.put("610", "s01d");
+        meMap.put("611", "s05d");
+        meMap.put("612", "s05d");
+        meMap.put("621", "s01d");
+        meMap.put("622", "s02d");
+        meMap.put("623", "s02d");
+        meMap.put("700", "a01d");
+        meMap.put("711", "a01d");
+        meMap.put("721", "a01d");
+        meMap.put("731", "a01d");
+        meMap.put("741", "a01d");
+        meMap.put("751", "a01d");
+        meMap.put("800", "c01d");
+        meMap.put("801", "c02d");
+        meMap.put("802", "c02d");
+        meMap.put("803", "c03d");
+        meMap.put("804", "c04d");
+        meMap.put("900", "u00d");
+    }
+
+    public void setText(View view) {
+        dateTV = view.findViewById(R.id.Date);
+        siteTV = view.findViewById(R.id.Site);
+        descriptionTV = view.findViewById(R.id.Description);
+        temperatureTV = view.findViewById(R.id.Temperature);
+        dateTV.setText(date);
+        siteTV.setText(stateName + "/" + countryName);
+        descriptionTV.setText(description);
+        temperatureTV.setText(Html.fromHtml(minTemprature + "<sup>o</sup>C" + " ~ " + maxTemprature + "<sup>o</sup>C"));
+
+        im = view.findViewById(R.id.Icon);
+        String s = meMap.get(weatherCode);
+        int imID = this.getResources().getIdentifier(s, "drawable", getActivity().getPackageName());
+        im.setImageResource(imID);
     }
 }

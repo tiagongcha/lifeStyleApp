@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.ViewHolder> {
     private List<ModuleButton> mbtn_img_ListItems;
     private Context mContext;
-    private OnAdapterDataChannel mdataListener;
+    private OnPositionPasser mPositionListener;
 
     public MyRVAdapter(List<ModuleButton> inputList) {
         mbtn_img_ListItems = inputList;
@@ -45,24 +45,18 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyRVAdapter.ViewHolder holder, int position) {
         try {
-            mdataListener = (OnAdapterDataChannel) mContext;
-        } catch (ClassCastException cce) {
-            throw new ClassCastException(mContext.toString() + " must implement OnAdapterDataPass");
+            mPositionListener = (OnPositionPasser) mContext;
+        } catch (Exception err) {
+
         }
 
         holder.btn_image_itemData.setImageDrawable(mbtn_img_ListItems.get(position).getImage());
         holder.tv_btn_label.setText(mbtn_img_ListItems.get(position).getText());
 
-//        if (mContext.getResources().getBoolean(R.bool.isWideDisplay)) { //Scale up button sizes if on tablet
-//            holder.btn_image_itemData.setScaleX(Float.valueOf("1.5"));
-//            holder.btn_image_itemData.setScaleY(Float.valueOf("1.5"));
-//            holder.btn_image_itemData.setPadding(0, 24, 0, 24);
-//            holder.tv_btn_label.setTextSize(25);
-//        }
         holder.btn_image_itemData.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                mdataListener.onAdapterDataPass(position);
+                mPositionListener.onAdapterDataPass(position);
             }
         });
 
@@ -73,7 +67,7 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.ViewHolder> {
         return mbtn_img_ListItems.size();
     }
 
-    public interface OnAdapterDataChannel {
+    public interface OnPositionPasser {
         void onAdapterDataPass(int position);
     }
 }

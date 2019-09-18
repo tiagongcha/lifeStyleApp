@@ -133,8 +133,8 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
             case R.id.button_create_profile:{
                 if(validateInput()){
                     storeUserProfile();
-                    Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
-                    startActivity(homeIntent);
+                    Intent goalIntent = new Intent(getActivity(), GoalCreateActivity.class);
+                    startActivity(goalIntent);
                 }
                 break;
             }
