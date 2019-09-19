@@ -108,4 +108,14 @@
     </string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_weather">WeatherActivity</string>
+    <string name="rongminjin">rongminjin</string>
+    <string name="Icon_weather">TODO</string>
+    <string name="d1_date">TextView</string>
+    <string name="d2_icon">D2_Icon</string>
+    <string name="Site">TextView</string>
+    <string name="Description">TextView</string>
+    <string name="Temperature">TextView</string>
+    <string name="Site_D2">TextView</string>
+    <string name="Description_D2">TextView</string>
+    <string name="Temperature_D2">TextView</string>
 </resources>
