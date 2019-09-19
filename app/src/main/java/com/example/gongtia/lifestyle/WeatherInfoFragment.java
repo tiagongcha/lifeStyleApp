@@ -103,26 +103,11 @@ public class WeatherInfoFragment extends Fragment {
 
     void getWeather(Location location) throws IOException, JSONException {
         //Get city name by Longitude and Latitude
-        List<Address> result = null;
-        try {
-            if (location != null) {
-                Geocoder gc = new Geocoder(getActivity(), Locale.getDefault());
-                result = gc.getFromLocation(location.getLatitude(),
-                        location.getLongitude(), 1);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        Address address = result.get(0);
-        if (address == null)
-            Toast.makeText(getActivity(), "null", Toast.LENGTH_SHORT).show();
-
-        String locality = address.getLocality();//得到城市
+        String lat = Double.toString(location.getLatitude());
+        String lon =Double.toString(location.getLongitude());
 
         // Send city name to weatherbit.io to get Weacthre information
-        String weatherURL = "https://api.weatherbit.io/v2.0/forecast/daily?city=" + locality + "&key=cd1c1aa25a414247a70a1450ba94a3d4";
+        String weatherURL = "https://api.weatherbit.io/v2.0/forecast/daily?lat=" + lat+"&lon="+lon + "&key=cd1c1aa25a414247a70a1450ba94a3d4";
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
         //Remove strict for  don't run network operation on main thread
@@ -225,7 +210,7 @@ public class WeatherInfoFragment extends Fragment {
         descriptionTV = view.findViewById(R.id.Description);
         temperatureTV = view.findViewById(R.id.Temperature);
         dateTV.setText(date);
-        siteTV.setText(stateName + "/" + countryName);
+        siteTV.setText(cityName + "/" + stateName);
         descriptionTV.setText(description);
         temperatureTV.setText(Html.fromHtml(minTemprature + "<sup>o</sup>C" + " ~ " + maxTemprature + "<sup>o</sup>C"));
 

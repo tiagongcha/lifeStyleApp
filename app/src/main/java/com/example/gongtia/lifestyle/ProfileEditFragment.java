@@ -1,6 +1,7 @@
 package com.example.gongtia.lifestyle;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -301,6 +302,18 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
                         url.toString(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        //lock screen to portrait
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    @Override public void onPause() {
+        super.onPause();
+        //set rotation to sensor dependent
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
 }

@@ -9,7 +9,16 @@
     android:padding="16dp"
     tools:context=".RegistrationActivity">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/heartImg"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"/>
+
+
     <TextView
+        android:layout_marginTop="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Register new account" />

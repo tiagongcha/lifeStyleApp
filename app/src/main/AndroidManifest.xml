@@ -32,10 +32,13 @@
         <activity android:name=".HomeActivity"/>
         <activity android:name=".ProfileCreateActivity"/>
         <activity android:name=".RegistrationActivity"/>
-        <activity android:name=".ProfileEditActivity"/>
+        <activity android:name=".ProfileEditActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".WeatherActivity"/>
-        <activity android:name=".GoalCreateActivity"/>
-        <activity android:name=".GoalEditActivity"/>
+        <activity android:name=".GoalCreateActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".GoalEditActivity"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

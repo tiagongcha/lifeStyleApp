@@ -1,6 +1,7 @@
 package com.example.gongtia.lifestyle;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -124,5 +125,17 @@ public class GoalEditFragment extends Fragment implements View.OnClickListener{
         curRef.child("goal").setValue(mGoal);
         curRef.child("lifestyle").setValue(mLifestyle);
         curRef.child("lbs").setValue(mLbs);
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        //lock screen to portrait
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    @Override public void onPause() {
+        super.onPause();
+        //set rotation to sensor dependent
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 }

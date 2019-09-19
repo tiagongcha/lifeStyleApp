@@ -1,6 +1,7 @@
 package com.example.gongtia.lifestyle;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -176,8 +177,7 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
 
                 mProfilePic.setImageBitmap(thumbnailImage);
 
-                Toast.makeText(getActivity(), "Upload Success, download URL " +
-                        url.toString(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(getActivity(), "Upload Success", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -196,11 +196,6 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
     }
 
-
-//    private void showBMI(){
-//        double bmi = 703 * weight/(height * height);
-//        tv_showBMI.setText("" + new DecimalFormat("#.##").format(bmi));
-//    }
 
     private boolean validateInput(){
         mUserName = etUserName.getText().toString();
@@ -285,6 +280,18 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         mUserProfile.setUid(user.getUid());
         mDatabase.child(user.getUid()).setValue(mUserProfile);
 
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        //lock screen to portrait
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    @Override public void onPause() {
+        super.onPause();
+        //set rotation to sensor dependent
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
 

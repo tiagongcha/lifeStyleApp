@@ -1,12 +1,14 @@
 package com.example.gongtia.lifestyle;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -103,9 +105,9 @@ public class GoalFragment extends Fragment implements View.OnClickListener {
         }
 
         if(mLifestyle.equals("Active")){
-            currentCalories = BMR * 1.2;
+            currentCalories = BMR * 1.75;
         }else{
-            currentCalories = BMR * 1.725;
+            currentCalories = BMR * 1.2;
         }
         return currentCalories;
     }
@@ -132,9 +134,9 @@ public class GoalFragment extends Fragment implements View.OnClickListener {
         }
 
         if(mLifestyle.equals("Active")){
-            newCalories = BMR * 1.2;
+            newCalories = BMR * 1.75;
         }else{
-            newCalories = BMR * 1.725;
+            newCalories = BMR * 1.2;
         }
         return newCalories;
     }
@@ -148,9 +150,30 @@ public class GoalFragment extends Fragment implements View.OnClickListener {
         double BMI = calcBMI();
         double currentCalories = calcCurrentCalories();
         double newCalories = calcNewCalories();
+
+        if((mSex.equals("Female") && currentCalories < 1000) || (mSex.equals("Female") && newCalories < 1000)){
+            Toast.makeText(getActivity(), "Your calories intake is less than 1000 which is unhealthy", Toast.LENGTH_SHORT).show();
+        }
+
+        if((mSex.equals("Male") && currentCalories < 1200) || (mSex.equals("Male") && newCalories < 1200)){
+            Toast.makeText(getActivity(), "Your calories intake is less than 1200 which is unhealthy", Toast.LENGTH_SHORT).show();
+        }
+
         mTvCurrentCalories.setText("" + new DecimalFormat("#.##").format(currentCalories));
         mTvCurrentBMI.setText("" + new DecimalFormat("#.##").format(BMI));
         mTvNewCalories.setText("" + new DecimalFormat("#.##").format(newCalories));
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        //lock screen to portrait
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    @Override public void onPause() {
+        super.onPause();
+        //set rotation to sensor dependent
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
 }

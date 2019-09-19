@@ -15,7 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.ViewHolder> {
     private List<ModuleButton> mbtn_img_ListItems;
     private Context mContext;
-    private OnPositionPasser mPositionListener;
+    private OnTransferListener mTransferListener;
+
+    public static int positionGetter;
+
 
     public MyRVAdapter(List<ModuleButton> inputList) {
         mbtn_img_ListItems = inputList;
@@ -45,7 +48,7 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyRVAdapter.ViewHolder holder, int position) {
         try {
-            mPositionListener = (OnPositionPasser) mContext;
+            mTransferListener = (OnTransferListener) mContext;
         } catch (Exception err) {
 
         }
@@ -56,7 +59,7 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.ViewHolder> {
         holder.btn_image_itemData.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                mPositionListener.onAdapterDataPass(position);
+                mTransferListener.onTransferPosition(position);
             }
         });
 
@@ -67,7 +70,10 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.ViewHolder> {
         return mbtn_img_ListItems.size();
     }
 
-    public interface OnPositionPasser {
-        void onAdapterDataPass(int position);
+    /**create an interface then transfer the position from the adapter to the activity.
+     *
+     */
+    public interface OnTransferListener {
+        void onTransferPosition(int position);
     }
 }

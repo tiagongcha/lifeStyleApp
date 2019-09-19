@@ -1,6 +1,7 @@
 package com.example.gongtia.lifestyle;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -108,6 +109,18 @@ public class GoalCreateFragment extends Fragment implements View.OnClickListener
         mDatabase.child(userId).child("goal").setValue(mGoal);
         mDatabase.child(userId).child("lifestyle").setValue(mLifestyle);
         mDatabase.child(userId).child("lbs").setValue(mLbs);
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        //lock screen to portrait
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    @Override public void onPause() {
+        super.onPause();
+        //set rotation to sensor dependent
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
 }

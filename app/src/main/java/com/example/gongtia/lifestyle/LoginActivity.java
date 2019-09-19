@@ -6,7 +6,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,12 +24,17 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailTV, passwordTV;
     private Button loginBtn, signupBtn;
     private ProgressBar progressBar;
+    private TextView tvSignup;
+
 
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        ImageView img= (ImageView) findViewById(R.id.heartImg);
+        img.setImageResource(R.drawable.heartsmall);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -40,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        signupBtn.setOnClickListener(new View.OnClickListener(){
+        tvSignup.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Intent signupIntent = new Intent(LoginActivity.this, RegistrationActivity.class);
@@ -93,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordTV = findViewById(R.id.password);
 
         loginBtn = findViewById(R.id.login);
-        signupBtn = findViewById(R.id.signup);
+        tvSignup = findViewById(R.id.signup);
         progressBar = findViewById(R.id.progressBar);
     }
 }

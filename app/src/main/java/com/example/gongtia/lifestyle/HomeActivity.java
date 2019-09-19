@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.view.MenuItem;
 
-public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnPositionPasser{
+public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnTransferListener{
 
     private FragmentTransaction m_fTrans;
 
@@ -34,7 +35,7 @@ public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnPos
         }else{
 //            tablet version:
             m_fTrans.replace(R.id.fl_master_wd, new ModuleListsFragment());
-            m_fTrans.replace(R.id.fl_detail_wd, new GoalCreateFragment());
+            m_fTrans.replace(R.id.fl_detail_wd, new MapFragment());
             m_fTrans.addToBackStack(null);
             m_fTrans.commit();
         }
@@ -62,6 +63,13 @@ public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnPos
                     getSupportFragmentManager().beginTransaction().replace(R.id.main_container,
                             selectedFragment).commit();
                     break;
+
+                case R.id.nav_logout:
+                    FirebaseAuth.getInstance().signOut();
+                    Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
+                    startActivity(loginIntent);
+                    break;
+
             }
             return true;
         }
@@ -69,7 +77,7 @@ public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnPos
 
 //each module item button handler
     @Override
-    public void onAdapterDataPass(int position) {
+    public void onTransferPosition(int position) {
         switch (position) {
             case 0:
                 weatherButtonHandler();
@@ -77,7 +85,6 @@ public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnPos
             case 1:
                 hikingButtonHandler();
                 break;
-
         }
     }
 
