@@ -1,4 +1,4 @@
-package com.example.gongtia.lifestyle;
+package com.example.gongtia.lifestyle.fragment;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.gongtia.lifestyle.R;
+import com.example.gongtia.lifestyle.model.User;
+import com.example.gongtia.lifestyle.activity.GoalEditActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;

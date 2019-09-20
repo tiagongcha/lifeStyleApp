@@ -1,9 +1,11 @@
-package com.example.gongtia.lifestyle;
+package com.example.gongtia.lifestyle.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageView;
+
+import com.example.gongtia.lifestyle.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 

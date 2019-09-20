@@ -1,4 +1,4 @@
-package com.example.gongtia.lifestyle;
+package com.example.gongtia.lifestyle.fragment;
 
 
 import android.Manifest;
@@ -24,6 +24,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.gongtia.lifestyle.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;

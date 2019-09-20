@@ -1,12 +1,8 @@
-package com.example.gongtia.lifestyle;
+package com.example.gongtia.lifestyle.fragment;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,28 +12,32 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.gongtia.lifestyle.activity.HomeActivity;
+import com.example.gongtia.lifestyle.R;
+import com.example.gongtia.lifestyle.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.google.firebase.database.ValueEventListener;
 
-public class GoalCreateFragment extends Fragment implements View.OnClickListener{
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
+public class GoalEditFragment extends Fragment implements View.OnClickListener{
     private String mGoal, mLbs, mLifestyle;
-    private String userId;
-    private FirebaseAuth mAuth;
-
-    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
     private RadioGroup rgGoal, rgLifestyle;
     private RadioButton rbGoal, rbLifestyle;
     private Button mbtSubmit;
     private EditText etLbs;
 
-    private DatabaseReference mDatabase;
-
+    private DatabaseReference mProfileReference;
+    private FirebaseAuth mAuth;
+    private String userId;
 
     @Nullable
     @Override
@@ -67,22 +67,26 @@ public class GoalCreateFragment extends Fragment implements View.OnClickListener
         mbtSubmit = view.findViewById(R.id.button_create_goal);
         mbtSubmit.setOnClickListener(this);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mAuth = FirebaseAuth.getInstance();
+        mProfileReference = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = mAuth.getCurrentUser();
         userId = user.getUid();
-        return view;
-    }
 
-    @Override
-    public void onClick(View v) {
-        if(validateLbs()){
-            storeUserGoal();
-//           jump to home activity
-            Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
-            startActivity(homeIntent);
-        }
+
+        ValueEventListener mListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                etLbs.setText(dataSnapshot.child(userId).getValue(User.class).getLbs());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+        mProfileReference.addValueEventListener(mListener);
+
+        return view;
     }
 
     private boolean validateLbs() {
@@ -102,13 +106,26 @@ public class GoalCreateFragment extends Fragment implements View.OnClickListener
                 return false;
             }
         }
+
         return true;
     }
 
-    private void storeUserGoal(){
-        mDatabase.child(userId).child("goal").setValue(mGoal);
-        mDatabase.child(userId).child("lifestyle").setValue(mLifestyle);
-        mDatabase.child(userId).child("lbs").setValue(mLbs);
+
+    @Override
+    public void onClick(View v) {
+        if(validateLbs()){
+            updateUserGoal();
+            Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
+            startActivity(homeIntent);
+        }
+
+    }
+
+    private void updateUserGoal(){
+        DatabaseReference curRef = mProfileReference.child(userId);
+        curRef.child("goal").setValue(mGoal);
+        curRef.child("lifestyle").setValue(mLifestyle);
+        curRef.child("lbs").setValue(mLbs);
     }
 
     @Override public void onResume() {
@@ -122,6 +139,4 @@ public class GoalCreateFragment extends Fragment implements View.OnClickListener
         //set rotation to sensor dependent
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
-
 }
-

@@ -1,4 +1,4 @@
-package com.example.gongtia.lifestyle;
+package com.example.gongtia.lifestyle.model;
 
 public class User {
     private String id;//key

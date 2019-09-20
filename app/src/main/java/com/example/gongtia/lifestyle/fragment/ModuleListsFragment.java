@@ -1,10 +1,14 @@
-package com.example.gongtia.lifestyle;
+package com.example.gongtia.lifestyle.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.example.gongtia.lifestyle.ModuleButton;
+import com.example.gongtia.lifestyle.MyRVAdapter;
+import com.example.gongtia.lifestyle.R;
 
 import java.util.ArrayList;
 
