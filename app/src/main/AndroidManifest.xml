@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".WelcomeScreen"
+            android:name=".activity.WelcomeScreen"
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
@@ -28,12 +28,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".HomeActivity"/>
-        <activity android:name=".ProfileCreateActivity"/>
-        <activity android:name=".RegistrationActivity"/>
-        <activity android:name=".ProfileEditActivity"/>
-        <activity android:name=".WeatherActivity"/>
+        <activity android:name=".activity.LoginActivity"/>
+        <activity android:name=".activity.HomeActivity"/>
+        <activity android:name=".activity.ProfileCreateActivity"/>
+        <activity android:name=".activity.RegistrationActivity"/>
+        <activity android:name=".activity.ProfileEditActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.WeatherActivity"/>
+        <activity android:name=".activity.GoalCreateActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.GoalEditActivity"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

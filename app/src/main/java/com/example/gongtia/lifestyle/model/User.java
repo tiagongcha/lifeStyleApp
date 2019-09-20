@@ -1,19 +1,23 @@
-package com.example.gongtia.lifestyle;
+package com.example.gongtia.lifestyle.model;
 
 public class User {
     private String id;//key
-    private String userName, city, country, sex;
+    private String userName, city, country, sex, goal, lbs, lifeStyle;
     private int age;
     private double height, weight;
+
+
 
 
     public User(){
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
+
     public void setUid(String uid){
         this.id = uid;
     }
+
     public void setUserName(String userName){
         this.userName = userName;
     }
@@ -71,4 +75,14 @@ public class User {
     public double getWeight() {
         return this.weight;
     }
+
+    public void setGoal(String goal){this.goal = goal;}
+    public void setLbs (String lbs) {this.lbs = lbs;}
+    public String getGoal(){ return this.goal;}
+    public String getLbs() {return this.lbs;}
+
+    public void setLifeStyle(String lifeStyle){this.lifeStyle = lifeStyle;}
+    public String getLifeStyle(){return this.lifeStyle;}
+
+
 }

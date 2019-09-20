@@ -1,4 +1,4 @@
-package com.example.gongtia.lifestyle;
+package com.example.gongtia.lifestyle.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,9 +6,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.gongtia.lifestyle.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -17,36 +20,45 @@ import com.google.firebase.auth.FirebaseAuth;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class RegistrationActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private EditText emailTV, passwordTV;
-    private Button regBtn;
+    private Button loginBtn, signupBtn;
     private ProgressBar progressBar;
+    private TextView tvSignup;
+
 
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
+        setContentView(R.layout.activity_login);
+
+        ImageView img= (ImageView) findViewById(R.id.heartImg);
+        img.setImageResource(R.drawable.heartsmall);
 
         mAuth = FirebaseAuth.getInstance();
 
         initializeUI();
 
-        regBtn.setOnClickListener(new View.OnClickListener() {
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registerNewUser();
+                loginUserAccount();
             }
         });
+
+        tvSignup.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent signupIntent = new Intent(LoginActivity.this, RegistrationActivity.class);
+                startActivity(signupIntent);
+            }
+        });
+
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    private void registerNewUser() {
+    private void loginUserAccount() {
         progressBar.setVisibility(View.VISIBLE);
 
         String email, password;
@@ -62,20 +74,23 @@ public class RegistrationActivity extends AppCompatActivity {
             return;
         }
 
-        mAuth.createUserWithEmailAndPassword(email, password)
+        mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Registration successful!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Login successful!", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
 
-                            Intent intent = new Intent(RegistrationActivity.this, ProfileCreateActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);
                         }
                         else {
-                            Toast.makeText(getApplicationContext(), "Registration failed! Please try again later", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Login failed! Please try again later", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
+
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            startActivity(intent);
                         }
                     }
                 });
@@ -84,7 +99,9 @@ public class RegistrationActivity extends AppCompatActivity {
     private void initializeUI() {
         emailTV = findViewById(R.id.email);
         passwordTV = findViewById(R.id.password);
-        regBtn = findViewById(R.id.register);
+
+        loginBtn = findViewById(R.id.login);
+        tvSignup = findViewById(R.id.signup);
         progressBar = findViewById(R.id.progressBar);
     }
 }

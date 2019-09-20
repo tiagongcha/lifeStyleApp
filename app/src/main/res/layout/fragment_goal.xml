@@ -1,245 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<androidx.core.widget.NestedScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@android:color/holo_blue_bright">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true"
+    android:overScrollMode="ifContentScrolls"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-    <LinearLayout
-        android:id="@+id/linear_WH"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        tools:context=".MainActivity" >
+        android:layout_height="match_parent"
+        android:padding="30dp"
+        tools:context=".fragment.ProfileEnterFrag">
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:text="Weight: "
-            android:textSize="18sp" />
-        <TextView
-            android:id="@+id/textView_Weight"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="80KG"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="80dp"
-            android:layout_marginLeft="80dp"
-            android:text="Height: "
-            android:textSize="18sp" />
-        <TextView
-            android:id="@+id/textView_Height"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="180cm"
-            android:textSize="18sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linear_Goal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/linear_WH"
-        tools:context=".MainActivity" >
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:text="Goal: "
-            android:textSize="18sp" />
-        <TextView
-            android:id="@+id/textView_Goal"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="75Kg"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="80dp"
-            android:layout_marginLeft="80dp"
-            android:text="To Do: "
-            android:textSize="18sp" />
-        <TextView
-            android:id="@+id/textView_ToDo"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="-5kg"
-            android:textSize="18sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linear_Change"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/linear_Goal"
-        tools:context=".MainActivity" >
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
+        <LinearLayout
+            android:id="@+id/linear1"
+            android:layout_width="346dp"
+            android:layout_height="49dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:text="Change Goal"
-            android:textSize="18sp"/>
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@color/colorPrimary"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+        </LinearLayout>
 
-        <EditText
-            android:id="@+id/editText_Change"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:inputType="number"
-            android:text=""
-            android:textSize="18sp"/>
 
-        <Button
-            android:id="@+id/button_submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="40dp"
-            android:layout_marginRight="40dp"
-            android:text="Submit"
-            android:textSize="18sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linear_Active"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/linear_Change"
-        tools:context=".MainActivity" >
-
-        <Spinner
-            android:id="@+id/spinner_active"
+        <TextView
+            android:id="@+id/tv_bmiDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginEnd="40dp"
-            android:layout_marginRight="40dp"/>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/linear_Current1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
-        android:layout_below="@id/linear_Active"
-        tools:context=".MainActivity" >
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
-        android:text="Current BMR: "
-        android:textSize="24sp" />
-    <TextView
-        android:id="@+id/textView_current_BMR"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="2443"
-        android:textSize="24sp" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/linear_Current2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_below="@id/linear_Current1"
-        tools:context=".MainActivity" >
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:text = "Current BMI"
+            android:inputType="text"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linear1" />
 
         <TextView
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:text="Current Caloric Needed: "
-            android:textSize="24sp" />
-        <TextView
-            android:id="@+id/textView_current_caloric"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="2890"
-            android:textSize="24sp" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/linear_Goal1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_below="@id/linear_Current2"
-        tools:context=".MainActivity" >
+            android:id="@+id/tv_currentBMI"
+            android:layout_width="128dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.024"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_bmiDescription" />
 
         <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:text="Goal BMR: "
-            android:textSize="24sp" />
-        <TextView
-            android:id="@+id/textView_Goal_BMR"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="2143"
-            android:textSize="24sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linear_Goal2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_below="@id/linear_Goal1"
-        tools:context=".MainActivity" >
+            android:id="@+id/tv_bmrDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:text="Current Daily Calories Intake"
+            android:inputType="text"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_currentBMI" />
 
         <TextView
-            android:id="@+id/textView10"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:text="Goal Caloric Needed: "
-            android:textSize="24sp" />
+            android:id="@+id/tv_currentCalories"
+            android:layout_width="128dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.024"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_bmrDescription" />
+
         <TextView
-            android:id="@+id/textView_goal_caloric"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="2690"
-            android:textSize="24sp" />
+            android:id="@+id/tv_goalCaloriesDescription"
+            android:layout_width="349dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:inputType="text"
+            android:text="New Daily Calories Intake"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_currentCalories" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tv_newCalories"
+            android:layout_width="128dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.056"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_goalCaloriesDescription" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/button_edit_goal"
+            android:layout_width="224dp"
+            android:layout_height="49dp"
+            android:layout_below="@+id/rl_bmi"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="30dp"
+            android:background="@color/colorPrimary"
+            android:fontFamily="sans-serif-medium"
+            android:text="Edit Fitness Goal"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.433"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_newCalories" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

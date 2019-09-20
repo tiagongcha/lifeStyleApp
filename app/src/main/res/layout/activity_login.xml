@@ -7,9 +7,17 @@
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".LoginActivity">
+    tools:context=".activity.LoginActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/heartImg"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"/>
 
     <TextView
+        android:layout_marginTop="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Account login"/>
@@ -30,13 +38,24 @@
         android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login" />
+        android:text="Login"
+        android:textSize="17dp"/>
 
-    <Button
+<!--    <Button-->
+<!--        android:id="@+id/signup"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="SignUp" />-->
+    <TextView
         android:id="@+id/signup"
-        android:layout_width="match_parent"
+        android:text="Don't have account? Sign Up"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="17dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SignUp" />
+        />
 
     <ProgressBar
         android:id="@+id/progressBar"
