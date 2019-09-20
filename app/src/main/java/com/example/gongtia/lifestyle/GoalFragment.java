@@ -44,7 +44,13 @@ public class GoalFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                goal = Integer.parseInt(g);
                 // TO update goal g to the realtime database;
+
+
+                //update goal BMR
+                calRMB();
+                tvGoalBMR.setText(goalBMR.toString());
             }
         });
 
@@ -54,7 +60,6 @@ public class GoalFragment extends Fragment {
         tvCurBMR.setText(curBMR.toString());
         tvCurColNed = view.findViewById(R.id.textView_current_caloric);
         tvGoalBMR = view.findViewById(R.id.textView_Goal_BMR);
-        tvGoalBMR.setText(goalBMR.toString());
         tvGoalColNed = view.findViewById(R.id.textView_goal_caloric);
 
         // spinner
