@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     android:overScrollMode="ifContentScrolls"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/goal_background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -78,7 +79,7 @@
         </RadioGroup>
 
         <RadioGroup
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="32dp"
             android:id="@+id/rg_active"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -117,7 +118,7 @@
         </RadioGroup>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="32dp"
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="5dp"
             android:id="@+id/tl_calories"
@@ -143,15 +144,15 @@
 
         <Button
             android:id="@+id/button_edit_goal"
-            android:layout_width="224dp"
-            android:layout_height="49dp"
+            android:layout_width="169dp"
+            android:layout_height="100dp"
             android:layout_below="@+id/rl_bmi"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="92dp"
+            android:layout_marginTop="24dp"
             android:layout_marginRight="30dp"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/submit"
             android:fontFamily="sans-serif-medium"
-            android:text="Submit Changes"
+            android:text=""
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
