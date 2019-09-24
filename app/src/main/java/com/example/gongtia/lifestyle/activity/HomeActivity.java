@@ -56,7 +56,6 @@ public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnTra
         }else{
 //            tablet version:
             m_fTrans.replace(R.id.fl_master_wd, new ModuleListsFragment());
-            m_fTrans.replace(R.id.fl_detail_wd, new MapFragment());
             m_fTrans.addToBackStack(null);
             m_fTrans.commit();
         }

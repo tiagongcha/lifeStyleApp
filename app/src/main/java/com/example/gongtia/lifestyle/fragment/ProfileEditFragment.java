@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,18 +36,16 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ybs.countrypicker.CountryPicker;
 import com.ybs.countrypicker.CountryPickerListener;
-
 import java.io.ByteArrayOutputStream;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ProfileEditFragment extends Fragment implements View.OnClickListener {
+public class ProfileEditFragment extends Fragment implements View.OnClickListener, Profile {
 
-    private String mUserName, mAge, mSex, mCity, mCountry, mHeight, mWeight, profilePhotoPath;
+    private String mUserName, mAge, mSex, mCity, mCountry, mHeight, mWeight;
 
     //    define UI componets:
     private EditText etUserName, etAge, etCity, etHeight, etWeight;
@@ -60,9 +57,6 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
 
     private double weight, height;
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-
-    //Define a request code for the camera
-    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private DatabaseReference mProfileReference;
     private FirebaseAuth mAuth;
@@ -154,7 +148,7 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
             }
             case R.id.button_update_profile:{
                 if(validateInput()){
-                    updateUserProfile();
+                    storeUserProfile();
                     Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
                     startActivity(homeIntent);
                 }
@@ -164,7 +158,8 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
 
     }
 
-    private void updateUserProfile() {
+    @Override
+    public void storeUserProfile() {
         DatabaseReference curRef = mProfileReference.child(userId);
         curRef.child("userName").setValue(mUserName);
         if(!mAge.matches("")){
@@ -188,7 +183,8 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void showCountry() {
+    @Override
+    public void showCountry() {
         final CountryPicker picker = CountryPicker.newInstance("Select Country");  // dialog title
         picker.setListener(new CountryPickerListener() {
             @Override
@@ -223,7 +219,8 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         });
     }
 
-    private boolean validateInput(){
+    @Override
+    public boolean validateInput(){
         mUserName = etUserName.getText().toString();
         mHeight = etHeight.getText().toString();
         mWeight = etWeight.getText().toString();
@@ -254,7 +251,8 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         return true;
     }
 
-    private void dispatchTakePictureIntent() {
+    @Override
+    public void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
