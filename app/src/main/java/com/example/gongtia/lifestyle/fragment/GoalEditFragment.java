@@ -94,6 +94,7 @@ public class GoalEditFragment extends Fragment implements View.OnClickListener{
         mLifestyle = rbLifestyle.getText().toString();
         mLbs = etLbs.getText().toString();
 
+
         if(!mGoal.equals("Maintain")){
             if(TextUtils.isEmpty(etLbs.getText())){
                 etLbs.setError("Enter pounds");
@@ -105,6 +106,9 @@ public class GoalEditFragment extends Fragment implements View.OnClickListener{
                 etLbs.setError("Getting Overzealous! Try <= 2 lbs");
                 return false;
             }
+        }else{
+            etLbs.setText("" + 0);
+            mLbs = "0";
         }
 
         return true;
