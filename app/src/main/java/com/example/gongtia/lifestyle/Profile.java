@@ -1,4 +1,4 @@
-package com.example.gongtia.lifestyle.fragment;
+package com.example.gongtia.lifestyle;
 
 public interface Profile {
     //Define a request code for the camera

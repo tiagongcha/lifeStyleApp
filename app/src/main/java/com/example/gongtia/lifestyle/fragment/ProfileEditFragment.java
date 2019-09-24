@@ -18,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.gongtia.lifestyle.Profile;
 import com.example.gongtia.lifestyle.R;
 import com.example.gongtia.lifestyle.model.User;
 import com.example.gongtia.lifestyle.activity.HomeActivity;
@@ -312,8 +313,6 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
-<<<<<<< HEAD:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileEditFragment.java
-=======
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
@@ -323,6 +322,4 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         outState.putString("height_text", mHeight);
         outState.putString("weight_text", mWeight);
     }
-
->>>>>>> upstream/master:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileEditFragment.java
 }

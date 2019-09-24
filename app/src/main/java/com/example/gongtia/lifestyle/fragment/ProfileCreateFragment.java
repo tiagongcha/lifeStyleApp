@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RadioButton;
 
+import com.example.gongtia.lifestyle.Profile;
 import com.example.gongtia.lifestyle.R;
 import com.example.gongtia.lifestyle.model.User;
 import com.example.gongtia.lifestyle.activity.GoalCreateActivity;
@@ -40,7 +41,7 @@ import com.ybs.countrypicker.CountryPickerListener;
 import java.io.ByteArrayOutputStream;
 import static android.app.Activity.RESULT_OK;
 
-public class ProfileCreateFragment extends Fragment implements View.OnClickListener, Profile{
+public class ProfileCreateFragment extends Fragment implements View.OnClickListener, Profile {
     private String mUserName, mAge, mSex, mCity, mCountry, mHeight, mWeight;
     private Uri url;
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -265,30 +266,19 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         mDatabase.child(user.getUid()).setValue(mUserProfile);
     }
 
+
+
     @Override public void onResume() {
         super.onResume();
         //lock screen to portrait
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
-<<<<<<< HEAD:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
-    @Override public void onResume() {
-        super.onResume();
-        //lock screen to portrait
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }
-
-=======
->>>>>>> upstream/master:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
     @Override public void onPause() {
         super.onPause();
         //set rotation to sensor dependent
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
-<<<<<<< HEAD:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
-
-=======
->>>>>>> upstream/master:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
 
     @Override
     public void onSaveInstanceState(Bundle outState){
