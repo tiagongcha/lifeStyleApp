@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RadioButton;
 
+import com.example.gongtia.lifestyle.Profile;
 import com.example.gongtia.lifestyle.R;
 import com.example.gongtia.lifestyle.model.User;
 import com.example.gongtia.lifestyle.activity.GoalCreateActivity;
@@ -38,20 +38,13 @@ import com.google.firebase.storage.UploadTask;
 import com.ybs.countrypicker.CountryPicker;
 import com.ybs.countrypicker.CountryPickerListener;
 
-
 import java.io.ByteArrayOutputStream;
-
 import static android.app.Activity.RESULT_OK;
 
-
-public class ProfileCreateFragment extends Fragment implements View.OnClickListener{
-
-
+public class ProfileCreateFragment extends Fragment implements View.OnClickListener, Profile {
     private String mUserName, mAge, mSex, mCity, mCountry, mHeight, mWeight;
-
     private Uri url;
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-
 
     //    define UI componets:
     private EditText  etUserName, etAge, etCity, etHeight, etWeight;
@@ -60,9 +53,6 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
     private Button mbtCreate, mbtCountry;
     private ImageButton mbtCamera;
     private ImageView mProfilePic;
-
-    //Define a request code for the camera
-    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private User mUserProfile = new User();
 
@@ -186,7 +176,8 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         });
     }
 
-    private void showCountry(){
+    @Override
+    public void showCountry(){
         final CountryPicker picker = CountryPicker.newInstance("Select Country");  // dialog title
         picker.setListener(new CountryPickerListener() {
             @Override
@@ -202,7 +193,8 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
     }
 
 
-    private boolean validateInput(){
+    @Override
+    public boolean validateInput(){
         mUserName = etUserName.getText().toString();
         mHeight = etHeight.getText().toString();
         mWeight = etWeight.getText().toString();
@@ -233,7 +225,8 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         return true;
     }
 
-    private void dispatchTakePictureIntent() {
+    @Override
+    public void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -242,8 +235,8 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         }
 
 
-
-    private void storeUserProfile(){
+    @Override
+    public void storeUserProfile(){
 //      name and age
         mUserProfile.setUserName(mUserName);
 
@@ -273,30 +266,19 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         mDatabase.child(user.getUid()).setValue(mUserProfile);
     }
 
+
+
     @Override public void onResume() {
         super.onResume();
         //lock screen to portrait
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
-<<<<<<< HEAD:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
-    @Override public void onResume() {
-        super.onResume();
-        //lock screen to portrait
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }
-
-=======
->>>>>>> upstream/master:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
     @Override public void onPause() {
         super.onPause();
         //set rotation to sensor dependent
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
-<<<<<<< HEAD:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
-
-=======
->>>>>>> upstream/master:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
 
     @Override
     public void onSaveInstanceState(Bundle outState){

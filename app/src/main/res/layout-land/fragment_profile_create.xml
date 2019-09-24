@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <LinearLayout
-                    android:id="@+id/linear1"
+                    android:id="@+id/profile_linear_image"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorPrimary"
@@ -35,7 +35,7 @@
 
                     <!--TODO: CHANGE IMage button and image view-->
                     <ImageButton
-                        android:id="@+id/button_camera"
+                        android:id="@+id/button_camera1"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginTop="20dp"
@@ -60,7 +60,7 @@
                     android:id="@+id/imageView1"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_below="@+id/linear1"
+                    android:layout_below="@+id/profile_linear_image"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="-14dp"
                     android:rotation="45"
