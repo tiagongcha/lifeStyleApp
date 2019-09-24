@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.gongtia.lifestyle.Goal;
 import com.example.gongtia.lifestyle.activity.HomeActivity;
 import com.example.gongtia.lifestyle.R;
 import com.example.gongtia.lifestyle.model.User;
@@ -27,7 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class GoalEditFragment extends Fragment implements View.OnClickListener{
+public class GoalEditFragment extends Fragment implements View.OnClickListener, Goal {
     private String mGoal, mLbs, mLifestyle;
 
     private RadioGroup rgGoal, rgLifestyle;
@@ -89,7 +90,8 @@ public class GoalEditFragment extends Fragment implements View.OnClickListener{
         return view;
     }
 
-    private boolean validateLbs() {
+    @Override
+    public boolean validateLbs() {
         mGoal = rbGoal.getText().toString();
         mLifestyle = rbLifestyle.getText().toString();
         mLbs = etLbs.getText().toString();
@@ -116,14 +118,15 @@ public class GoalEditFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         if(validateLbs()){
-            updateUserGoal();
+            storeUserGoal();
             Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
             startActivity(homeIntent);
         }
 
     }
 
-    private void updateUserGoal(){
+    @Override
+    public void storeUserGoal(){
         DatabaseReference curRef = mProfileReference.child(userId);
         curRef.child("goal").setValue(mGoal);
         curRef.child("lifestyle").setValue(mLifestyle);

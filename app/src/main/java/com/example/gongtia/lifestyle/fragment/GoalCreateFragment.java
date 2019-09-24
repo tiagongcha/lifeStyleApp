@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.gongtia.lifestyle.Goal;
 import com.example.gongtia.lifestyle.activity.HomeActivity;
 import com.example.gongtia.lifestyle.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class GoalCreateFragment extends Fragment implements View.OnClickListener{
+public class GoalCreateFragment extends Fragment implements View.OnClickListener, Goal {
 
     private String mGoal, mLbs, mLifestyle;
     private String userId;
@@ -87,7 +88,8 @@ public class GoalCreateFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private boolean validateLbs() {
+    @Override
+    public boolean validateLbs() {
         mGoal = rbGoal.getText().toString();
         mLifestyle = rbLifestyle.getText().toString();
         mLbs = etLbs.getText().toString();
@@ -110,7 +112,8 @@ public class GoalCreateFragment extends Fragment implements View.OnClickListener
         return true;
     }
 
-    private void storeUserGoal(){
+    @Override
+    public void storeUserGoal(){
         mDatabase.child(userId).child("goal").setValue(mGoal);
         mDatabase.child(userId).child("lifestyle").setValue(mLifestyle);
         mDatabase.child(userId).child("lbs").setValue(mLbs);
