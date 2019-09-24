@@ -5,8 +5,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     android:overScrollMode="ifContentScrolls"
+<<<<<<< HEAD
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/goal_background">
+=======
+    xmlns:android="http://schemas.android.com/apk/res/android">
+>>>>>>> upstream/master
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -16,8 +20,13 @@
 
         <LinearLayout
             android:id="@+id/linear1"
+<<<<<<< HEAD
             android:layout_width="200dp"
             android:layout_height="100dp"
+=======
+            android:layout_width="346dp"
+            android:layout_height="49dp"
+>>>>>>> upstream/master
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
@@ -29,6 +38,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+<<<<<<< HEAD
 
             <ImageView
                 android:id="@+id/iv_profile"
@@ -36,6 +46,8 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/life_goal_header"/>
 
+=======
+>>>>>>> upstream/master
         </LinearLayout>
 
 
@@ -43,6 +55,7 @@
             android:id="@+id/tv_bmiDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:layout_marginTop="24dp"
             android:ems="10"
             android:inputType="text"
@@ -50,6 +63,15 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.266"
+=======
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:text = "Current BMI"
+            android:inputType="text"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+>>>>>>> upstream/master
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linear1" />
 
@@ -57,10 +79,17 @@
             android:id="@+id/tv_currentBMI"
             android:layout_width="128dp"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:layout_marginTop="12dp"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
+=======
+            android:layout_marginTop="28dp"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.024"
+>>>>>>> upstream/master
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_bmiDescription" />
 
@@ -68,6 +97,7 @@
             android:id="@+id/tv_bmrDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:layout_marginTop="12dp"
             android:ems="10"
             android:inputType="text"
@@ -75,6 +105,15 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
+=======
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:text="Current Daily Calories Intake"
+            android:inputType="text"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+>>>>>>> upstream/master
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_currentBMI" />
 
@@ -82,24 +121,41 @@
             android:id="@+id/tv_currentCalories"
             android:layout_width="128dp"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:layout_marginTop="12dp"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
+=======
+            android:layout_marginTop="32dp"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.024"
+>>>>>>> upstream/master
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_bmrDescription" />
 
         <TextView
             android:id="@+id/tv_goalCaloriesDescription"
+<<<<<<< HEAD
             android:layout_width="343dp"
             android:layout_height="30dp"
             android:layout_marginTop="12dp"
+=======
+            android:layout_width="349dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="16dp"
+>>>>>>> upstream/master
             android:ems="10"
             android:inputType="text"
             android:text="New Daily Calories Intake"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
+<<<<<<< HEAD
             app:layout_constraintHorizontal_bias="0.0"
+=======
+            app:layout_constraintHorizontal_bias="1.0"
+>>>>>>> upstream/master
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_currentCalories" />
 
@@ -107,24 +163,42 @@
             android:id="@+id/tv_newCalories"
             android:layout_width="128dp"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:layout_marginTop="12dp"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
+=======
+            android:layout_marginTop="36dp"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.056"
+>>>>>>> upstream/master
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_goalCaloriesDescription" />
 
         <Button
             android:id="@+id/button_edit_goal"
+<<<<<<< HEAD
             android:layout_width="169dp"
             android:layout_height="100dp"
+=======
+            android:layout_width="224dp"
+            android:layout_height="49dp"
+>>>>>>> upstream/master
             android:layout_below="@+id/rl_bmi"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="40dp"
             android:layout_marginRight="30dp"
+<<<<<<< HEAD
             android:background="@drawable/edit"
             android:fontFamily="sans-serif-medium"
             android:text=""
+=======
+            android:background="@color/colorPrimary"
+            android:fontFamily="sans-serif-medium"
+            android:text="Edit Fitness Goal"
+>>>>>>> upstream/master
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.433"
