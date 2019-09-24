@@ -48,6 +48,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+//        Intent intentTemp = new Intent(LoginActivity.this, HomeActivity.class);
+//        startActivity(intentTemp);
+
     }
 
     private void loginUserAccount() {
