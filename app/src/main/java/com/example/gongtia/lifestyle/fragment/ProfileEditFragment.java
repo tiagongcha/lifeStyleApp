@@ -1,6 +1,7 @@
-package com.example.gongtia.lifestyle;
+package com.example.gongtia.lifestyle.fragment;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -18,6 +19,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.gongtia.lifestyle.R;
+import com.example.gongtia.lifestyle.model.User;
+import com.example.gongtia.lifestyle.activity.HomeActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -64,6 +68,7 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
     private FirebaseAuth mAuth;
     private String userId;
     private Uri url;
+    private boolean setCountry = false;
 
 
     @Override
@@ -115,6 +120,15 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
             }
         };
         mProfileReference.addValueEventListener(mListener);
+
+        if(savedInstanceState != null){
+            etUserName.setText("" + savedInstanceState.getString("username_text"));
+            etAge.setText("" + savedInstanceState.getString("age_text"));
+            etCity.setText("" + savedInstanceState.getString("city_text"));
+            etHeight.setText("" + savedInstanceState.getString("height_text"));
+            etWeight.setText("" + savedInstanceState.get("weight_text"));
+        }
+
         return view;
     }
 
@@ -153,18 +167,25 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
     private void updateUserProfile() {
         DatabaseReference curRef = mProfileReference.child(userId);
         curRef.child("userName").setValue(mUserName);
+        if(!mAge.matches("")){
+            int age = Integer.parseInt(mAge);
+            curRef.child("age").setValue(age);
+        }
+        if(!mCity.matches("")){
+            curRef.child("city").setValue(mCity);
+        }
 
-        int age = Integer.parseInt(mAge);
-        curRef.child("age").setValue(age);
-
-        curRef.child("city").setValue(mCity);
-        curRef.child("country").setValue(mCountry);
+        if(setCountry){
+            curRef.child("country").setValue(mCountry);
+        }
         curRef.child("sex").setValue(mSex);
 
-        double height = Double.parseDouble(mHeight);
-        double weight = Double.parseDouble(mWeight);
-        curRef.child("height").setValue(height);
-        curRef.child("weight").setValue(weight);
+        if(!mHeight.matches("") && !mWeight.matches("")){
+            double height = Double.parseDouble(mHeight);
+            double weight = Double.parseDouble(mWeight);
+            curRef.child("height").setValue(height);
+            curRef.child("weight").setValue(weight);
+        }
     }
 
     private void showCountry() {
@@ -176,6 +197,7 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
                 mCountry = name;
                 mbtCountry.setBackgroundResource(flagDrawableResID);
                 picker.dismiss();
+                setCountry = true;
             }
         });
         picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
@@ -213,45 +235,22 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
             etUserName.setError("User Name is Required");
             return false;
         }
-        if(mHeight.matches("")){
-            etHeight.setError("Height is Required");
-            return false;
-        }
-        if(mWeight.matches("")){
-            etWeight.setError("Weight is Required");
-            return false;
-        }
-        if(mAge.matches("")){
-            etAge.setError("Age is Required");
-        }
-        if(mCity.matches("")){
-            etCity.setError("City is Required");
-        }
-        if(mCountry.matches("")){
-            mbtCountry.setError("Country is Required");
-        }
 
-        if(TextUtils.isEmpty(etWeight.getText())){
-            etWeight.setError("Weight is Required");
-            return false;
-        }
-        if(TextUtils.isEmpty(etHeight.getText())){
-            etHeight.setError("Height is Required");
-            return false;
-        }
-        mWeight = etWeight.getText().toString();
-        mHeight = etHeight.getText().toString();
-        weight = Double.parseDouble(mWeight);
-        height = Double.parseDouble(mHeight);
-        if(weight <= 0 || weight >= 2000){
-            etWeight.setError("Weight not Valid");
-            return false;
-        }
-        if(height <=0 || height >= 200){
-            etHeight.setError("Height not Valid");
-            return false;
-        }
+        if(!mWeight.matches("") && !mHeight.matches("")){
+            mWeight = etWeight.getText().toString();
+            mHeight = etHeight.getText().toString();
+            weight = Double.parseDouble(mWeight);
+            height = Double.parseDouble(mHeight);
+            if(weight <= 0 || weight >= 2000){
+                etWeight.setError("Weight not Valid");
+                return false;
+            }
+            if(height <=0 || height >= 200){
+                etHeight.setError("Height not Valid");
+                return false;
+            }
 
+        }
         return true;
     }
 
@@ -303,4 +302,29 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         });
     }
 
+    @Override public void onResume() {
+        super.onResume();
+        //lock screen to portrait
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    @Override public void onPause() {
+        super.onPause();
+        //set rotation to sensor dependent
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    }
+
+<<<<<<< HEAD:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileEditFragment.java
+=======
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putString("username_text", mUserName);
+        outState.putString("age_text", mAge);
+        outState.putString("city_text", mCity);
+        outState.putString("height_text", mHeight);
+        outState.putString("weight_text", mWeight);
+    }
+
+>>>>>>> upstream/master:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileEditFragment.java
 }

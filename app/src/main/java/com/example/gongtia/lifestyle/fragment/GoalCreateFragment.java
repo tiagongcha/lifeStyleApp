@@ -1,6 +1,7 @@
-package com.example.gongtia.lifestyle;
+package com.example.gongtia.lifestyle.fragment;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.gongtia.lifestyle.activity.HomeActivity;
+import com.example.gongtia.lifestyle.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -100,6 +103,12 @@ public class GoalCreateFragment extends Fragment implements View.OnClickListener
                 etLbs.setError("Getting Overzealous! Try <= 2 lbs");
                 return false;
             }
+<<<<<<< HEAD
+=======
+        }else{
+            etLbs.setText("" + 0);
+            mLbs = "0";
+>>>>>>> upstream/master
         }
         return true;
     }
@@ -108,6 +117,18 @@ public class GoalCreateFragment extends Fragment implements View.OnClickListener
         mDatabase.child(userId).child("goal").setValue(mGoal);
         mDatabase.child(userId).child("lifestyle").setValue(mLifestyle);
         mDatabase.child(userId).child("lbs").setValue(mLbs);
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        //lock screen to portrait
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    @Override public void onPause() {
+        super.onPause();
+        //set rotation to sensor dependent
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
 }

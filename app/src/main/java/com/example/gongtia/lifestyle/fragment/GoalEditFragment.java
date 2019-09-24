@@ -1,6 +1,7 @@
-package com.example.gongtia.lifestyle;
+package com.example.gongtia.lifestyle.fragment;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,6 +12,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.gongtia.lifestyle.activity.HomeActivity;
+import com.example.gongtia.lifestyle.R;
+import com.example.gongtia.lifestyle.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -18,8 +22,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -92,6 +94,10 @@ public class GoalEditFragment extends Fragment implements View.OnClickListener{
         mLifestyle = rbLifestyle.getText().toString();
         mLbs = etLbs.getText().toString();
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
         if(!mGoal.equals("Maintain")){
             if(TextUtils.isEmpty(etLbs.getText())){
                 etLbs.setError("Enter pounds");
@@ -103,6 +109,12 @@ public class GoalEditFragment extends Fragment implements View.OnClickListener{
                 etLbs.setError("Getting Overzealous! Try <= 2 lbs");
                 return false;
             }
+<<<<<<< HEAD
+=======
+        }else{
+            etLbs.setText("" + 0);
+            mLbs = "0";
+>>>>>>> upstream/master
         }
 
         return true;
@@ -124,5 +136,17 @@ public class GoalEditFragment extends Fragment implements View.OnClickListener{
         curRef.child("goal").setValue(mGoal);
         curRef.child("lifestyle").setValue(mLifestyle);
         curRef.child("lbs").setValue(mLbs);
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        //lock screen to portrait
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    @Override public void onPause() {
+        super.onPause();
+        //set rotation to sensor dependent
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 }

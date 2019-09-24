@@ -1,6 +1,9 @@
-package com.example.gongtia.lifestyle;
+package com.example.gongtia.lifestyle.activity;
 
 import android.os.Bundle;
+
+import com.example.gongtia.lifestyle.R;
+import com.example.gongtia.lifestyle.fragment.WeatherInfoFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 

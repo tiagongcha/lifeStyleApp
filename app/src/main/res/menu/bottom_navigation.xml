@@ -13,4 +13,9 @@
         android:id="@+id/nav_goal"
         android:icon="@drawable/ic_goal_all_black_24dp"
         android:title="GOAL"/>
+
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_logout_24dp"
+        android:title="Logout"/>
 </menu>

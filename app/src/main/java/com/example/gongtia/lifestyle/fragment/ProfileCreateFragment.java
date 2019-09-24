@@ -1,17 +1,16 @@
-package com.example.gongtia.lifestyle;
+package com.example.gongtia.lifestyle.fragment;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.core.content.FileProvider;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +21,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RadioButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.gongtia.lifestyle.R;
+import com.example.gongtia.lifestyle.model.User;
+import com.example.gongtia.lifestyle.activity.GoalCreateActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -40,11 +40,6 @@ import com.ybs.countrypicker.CountryPickerListener;
 
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -72,12 +67,14 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
     private User mUserProfile = new User();
 
     private double weight, height;
+    private boolean setCountry = false;
 
     private DatabaseReference mDatabase;
 
     public ProfileCreateFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,6 +109,14 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         mProfilePic = (ImageView) view.findViewById(R.id.iv_profile);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        if(savedInstanceState != null){
+            etUserName.setText("" + savedInstanceState.getString("username_text"));
+            etAge.setText("" + savedInstanceState.getString("age_text"));
+            etCity.setText("" + savedInstanceState.getString("city_text"));
+            etHeight.setText("" + savedInstanceState.getString("height_text"));
+            etWeight.setText("" + savedInstanceState.get("weight_text"));
+        }
 
         return view;
 
@@ -176,8 +181,7 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
 
                 mProfilePic.setImageBitmap(thumbnailImage);
 
-                Toast.makeText(getActivity(), "Upload Success, download URL " +
-                        url.toString(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(getActivity(), "Upload Success", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -190,17 +194,13 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
                 // Implement your code here
                 mCountry = name;
                 mbtCountry.setBackgroundResource(flagDrawableResID);
+                setCountry = true;
                 picker.dismiss();
             }
         });
         picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
     }
 
-
-//    private void showBMI(){
-//        double bmi = 703 * weight/(height * height);
-//        tv_showBMI.setText("" + new DecimalFormat("#.##").format(bmi));
-//    }
 
     private boolean validateInput(){
         mUserName = etUserName.getText().toString();
@@ -214,45 +214,22 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
             etUserName.setError("User Name is Required");
             return false;
         }
-        if(mHeight.matches("")){
-            etHeight.setError("Height is Required");
-            return false;
-        }
-        if(mWeight.matches("")){
-            etWeight.setError("Weight is Required");
-            return false;
-        }
-        if(mAge.matches("")){
-            etAge.setError("Age is Required");
-        }
-        if(mCity.matches("")){
-            etCity.setError("City is Required");
-        }
-        if(mCountry.matches("")){
-            mbtCountry.setError("Country is Required");
-        }
 
-        if(TextUtils.isEmpty(etWeight.getText())){
-            etWeight.setError("Weight is Required");
-            return false;
-        }
-        if(TextUtils.isEmpty(etHeight.getText())){
-            etHeight.setError("Height is Required");
-            return false;
-        }
-        mWeight = etWeight.getText().toString();
-        mHeight = etHeight.getText().toString();
-        weight = Double.parseDouble(mWeight);
-        height = Double.parseDouble(mHeight);
-        if(weight <= 0 || weight >= 2000){
-            etWeight.setError("Weight not Valid");
-            return false;
-        }
-        if(height <=0 || height >= 200){
-            etHeight.setError("Height not Valid");
-            return false;
-        }
+        if(!mWeight.matches("") && !mHeight.matches("")){
+            mWeight = etWeight.getText().toString();
+            mHeight = etHeight.getText().toString();
+            weight = Double.parseDouble(mWeight);
+            height = Double.parseDouble(mHeight);
+            if(weight <= 0 || weight >= 2000){
+                etWeight.setError("Weight not Valid");
+                return false;
+            }
+            if(height <=0 || height >= 200){
+                etHeight.setError("Height not Valid");
+                return false;
+            }
 
+        }
         return true;
     }
 
@@ -269,23 +246,66 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
     private void storeUserProfile(){
 //      name and age
         mUserProfile.setUserName(mUserName);
-        int age = Integer.parseInt(mAge);
-        mUserProfile.setAge(age);
+
+        if(!mAge.matches("")){
+            int age = Integer.parseInt(mAge);
+            mUserProfile.setAge(age);
+        }
+
         mUserProfile.setSex(mSex);
 //        location
-        mUserProfile.setCity(mCity);
-        mUserProfile.setCountry(mCountry);
-//        health data
-        double height = Double.parseDouble(mHeight);
-        mUserProfile.setHeight(height);
-        double weight = Double.parseDouble(mWeight);
-        mUserProfile.setWeight(weight);
+        if(!mCity.matches("")){
+            mUserProfile.setCity(mCity);
+        }
+        if(setCountry){
+            mUserProfile.setCountry(mCountry);
+        }
+
+        if(!mHeight.matches("") && !mWeight.matches("")){
+            double height = Double.parseDouble(mHeight);
+            mUserProfile.setHeight(height);
+            double weight = Double.parseDouble(mWeight);
+            mUserProfile.setWeight(weight);
+        }
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         mUserProfile.setUid(user.getUid());
         mDatabase.child(user.getUid()).setValue(mUserProfile);
-
     }
 
+    @Override public void onResume() {
+        super.onResume();
+        //lock screen to portrait
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
 
+<<<<<<< HEAD:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
+    @Override public void onResume() {
+        super.onResume();
+        //lock screen to portrait
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+=======
+>>>>>>> upstream/master:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
+    @Override public void onPause() {
+        super.onPause();
+        //set rotation to sensor dependent
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    }
+<<<<<<< HEAD:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
+
+=======
+>>>>>>> upstream/master:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+
+        outState.putString("username_text", mUserName);
+        outState.putString("age_text", mAge);
+        outState.putString("city_text", mCity);
+        outState.putString("height_text", mHeight);
+        outState.putString("weight_text", mWeight);
+    }
 }
