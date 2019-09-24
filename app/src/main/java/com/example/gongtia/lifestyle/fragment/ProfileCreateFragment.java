@@ -271,11 +271,24 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
+<<<<<<< HEAD:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
+    @Override public void onResume() {
+        super.onResume();
+        //lock screen to portrait
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+=======
+>>>>>>> upstream/master:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
     @Override public void onPause() {
         super.onPause();
         //set rotation to sensor dependent
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
+<<<<<<< HEAD:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
+
+=======
+>>>>>>> upstream/master:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileCreateFragment.java
 
     @Override
     public void onSaveInstanceState(Bundle outState){

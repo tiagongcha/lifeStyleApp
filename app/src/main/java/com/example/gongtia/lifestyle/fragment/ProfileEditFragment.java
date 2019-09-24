@@ -312,6 +312,8 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
+<<<<<<< HEAD:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileEditFragment.java
+=======
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
@@ -322,4 +324,5 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         outState.putString("weight_text", mWeight);
     }
 
+>>>>>>> upstream/master:app/src/main/java/com/example/gongtia/lifestyle/fragment/ProfileEditFragment.java
 }

@@ -14,7 +14,7 @@
         tools:context=".fragment.ProfileEnterFrag">
 
         <LinearLayout
-            android:id="@+id/linear1"
+            android:id="@+id/profile_linear_image"
             android:layout_width="346dp"
             android:layout_height="49dp"
             android:layout_marginStart="8dp"
@@ -43,7 +43,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linear1" />
+            app:layout_constraintTop_toBottomOf="@+id/profile_linear_image" />
 
         <TextView
             android:id="@+id/tv_currentBMI"
