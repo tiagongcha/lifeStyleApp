@@ -5,12 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     android:overScrollMode="ifContentScrolls"
-<<<<<<< HEAD
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/goal_background">
-=======
-    xmlns:android="http://schemas.android.com/apk/res/android">
->>>>>>> upstream/master
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -83,11 +79,7 @@
         </RadioGroup>
 
         <RadioGroup
-<<<<<<< HEAD
             android:layout_marginTop="32dp"
-=======
-            android:layout_marginTop="50dp"
->>>>>>> upstream/master
             android:id="@+id/rg_active"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -126,11 +118,7 @@
         </RadioGroup>
 
         <com.google.android.material.textfield.TextInputLayout
-<<<<<<< HEAD
             android:layout_marginTop="32dp"
-=======
-            android:layout_marginTop="50dp"
->>>>>>> upstream/master
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="5dp"
             android:id="@+id/tl_calories"
@@ -156,7 +144,6 @@
 
         <Button
             android:id="@+id/button_create_goal"
-<<<<<<< HEAD
             android:layout_width="169dp"
             android:layout_height="100dp"
             android:layout_below="@+id/rl_bmi"
@@ -168,20 +155,6 @@
             android:text=""
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-=======
-            android:layout_width="224dp"
-            android:layout_height="49dp"
-            android:layout_below="@+id/rl_bmi"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="92dp"
-            android:layout_marginRight="30dp"
-            android:background="@color/colorPrimary"
-            android:fontFamily="sans-serif-medium"
-            android:text="Submit Fitness Goal"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
->>>>>>> upstream/master
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tl_calories" />
 
