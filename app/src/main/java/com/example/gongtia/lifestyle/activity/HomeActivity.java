@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 
-import com.example.gongtia.lifestyle.fragment.MapFragment;
 import com.example.gongtia.lifestyle.fragment.ModuleListsFragment;
 import com.example.gongtia.lifestyle.MyRVAdapter;
 import com.example.gongtia.lifestyle.fragment.ProfileFragment;
