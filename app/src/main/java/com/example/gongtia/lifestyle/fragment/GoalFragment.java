@@ -125,9 +125,9 @@ public class GoalFragment extends Fragment implements View.OnClickListener {
         }
 
         else if(mGoal.equals("Lose")){
-            goalWeight -= pounds;
+            goalWeight = mWeight - pounds;
         }else{
-            goalWeight += pounds;
+            goalWeight = mWeight + pounds;
         }
         double BMR = 0;
         if(mSex.equals("Female")){
