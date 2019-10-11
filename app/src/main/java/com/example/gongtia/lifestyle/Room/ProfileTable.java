@@ -14,6 +14,7 @@ public class ProfileTable {
     @ColumnInfo(name = "userName")
     private String userName;
 
+//    store json string in value col
     @NonNull
     @ColumnInfo(name = "profiledata")
     private String profileJson;
