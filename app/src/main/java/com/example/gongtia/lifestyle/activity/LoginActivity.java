@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.gongtia.lifestyle.R;
 import com.example.gongtia.lifestyle.Room.AppDatabase;
+import com.example.gongtia.lifestyle.Room.ProfileRoomDatabase;
 import com.example.gongtia.lifestyle.Room.WeatherDataEntity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.RoomDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -31,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView tvSignup;
     public AppDatabase db;
+    public ProfileRoomDatabase prdb;
 
 
     private FirebaseAuth mAuth;
@@ -60,10 +63,12 @@ public class LoginActivity extends AppCompatActivity {
                     protected Void doInBackground(Void... voids) {
                         db = AppDatabase.getInstance(getBaseContext());
                         WeatherDataEntity wd = new WeatherDataEntity();
-                        wd.did= 1;
+
                         wd.cityName = "slc";
                         wd.stateName = "UT";
                         db.weatherDataDao().insertWeatherDataEntity(wd);
+
+                        prdb = ProfileRoomDatabase.getDatabase(getBaseContext());
                         return null;
                     }
                 }.execute();

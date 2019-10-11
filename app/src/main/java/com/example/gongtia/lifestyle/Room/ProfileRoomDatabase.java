@@ -21,6 +21,7 @@ public abstract class ProfileRoomDatabase extends RoomDatabase {
             mInstance = Room.databaseBuilder(context.getApplicationContext(),
                     ProfileRoomDatabase.class, "weather.db").addCallback(sRoomDatabaseCallback).build();
         }
+        new PopulateDbAsync(mInstance).execute();
         return mInstance;
     }
 
