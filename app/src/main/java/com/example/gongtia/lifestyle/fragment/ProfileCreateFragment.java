@@ -10,6 +10,8 @@ import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,7 @@ import android.widget.RadioButton;
 import com.example.gongtia.lifestyle.JSONProfileUtils;
 import com.example.gongtia.lifestyle.Profile;
 import com.example.gongtia.lifestyle.R;
+import com.example.gongtia.lifestyle.ViewModel.ProfileViewModel;
 import com.example.gongtia.lifestyle.model.User;
 import com.example.gongtia.lifestyle.activity.GoalCreateActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -64,6 +67,8 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
     private boolean setCountry = false;
 
     private DatabaseReference mDatabase;
+    //    ADD VIEW MODEL:
+    private ProfileViewModel mProfileViewModel;
 
     public ProfileCreateFragment() {
         // Required empty public constructor
@@ -111,10 +116,28 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
             etHeight.setText("" + savedInstanceState.getString("height_text"));
             etWeight.setText("" + savedInstanceState.get("weight_text"));
         }
+        //        ADD VIEW MODEL!!!!!!!
+        mProfileViewModel = ViewModelProviders.of(getActivity()).get(ProfileViewModel.class);
+//Set the observer
+        (mProfileViewModel.getData()).observe(this,nameObserver);
 
         return view;
 
     }
+
+    final Observer<User> nameObserver = new Observer<User>() {
+        @Override
+        public void onChanged(User user) {
+            if(user!=null){
+                etUserName.setText(user.getUserName());
+                etAge.setText("" + user.getAge());
+                etCity.setText(user.getCity());
+                etHeight.setText("" + user.getHeight());
+                etWeight.setText("" + user.getWeight());
+            }
+        }
+    };
+
 
 
     @Override
