@@ -7,6 +7,7 @@ import com.example.gongtia.lifestyle.repository.ProfileRepository;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class ProfileViewModel extends AndroidViewModel {
@@ -16,5 +17,15 @@ public class ProfileViewModel extends AndroidViewModel {
     public ProfileViewModel(@NonNull Application application) {
         super(application);
         mProfileRepository = new ProfileRepository(application);
+        jsonData = mProfileRepository.getData();
+    }
+
+    public void setUser(String userName, String user){
+
+        mProfileRepository.setUser(userName, user);
+    }
+
+    public LiveData<User> getData(){
+        return jsonData;
     }
 }
