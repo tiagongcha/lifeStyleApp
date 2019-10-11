@@ -1,4 +1,8 @@
+<<<<<<< HEAD:app/src/main/java/com/example/gongtia/lifestyle/ViewModel/WeatherRepository.java
 package com.example.gongtia.lifestyle.ViewModel;
+=======
+package com.example.gongtia.lifestyle.repository;
+>>>>>>> upstream/master:app/src/main/java/com/example/gongtia/lifestyle/repository/WeatherRepository.java
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -12,6 +16,12 @@ import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
+<<<<<<< HEAD:app/src/main/java/com/example/gongtia/lifestyle/ViewModel/WeatherRepository.java
+=======
+
+import com.example.gongtia.lifestyle.Room.WeatherData;
+
+>>>>>>> upstream/master:app/src/main/java/com/example/gongtia/lifestyle/repository/WeatherRepository.java
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.MutableLiveData;
 
@@ -34,7 +44,7 @@ public class WeatherRepository {
     MutableLiveData<WeatherData> jsonData = new MutableLiveData<WeatherData>();
     private Activity mActivity;
 
-    WeatherRepository(Application application) {
+   public WeatherRepository(Application application) {
 
     }
 

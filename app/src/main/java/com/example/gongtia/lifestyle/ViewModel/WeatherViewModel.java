@@ -3,6 +3,10 @@ package com.example.gongtia.lifestyle.ViewModel;
 import android.app.Activity;
 import android.app.Application;
 
+
+import com.example.gongtia.lifestyle.Room.WeatherData;
+import com.example.gongtia.lifestyle.repository.WeatherRepository;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
