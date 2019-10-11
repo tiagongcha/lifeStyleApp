@@ -10,17 +10,17 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.StrictMode;
-import android.util.Log;
 import android.widget.Toast;
+
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.gongtia.lifestyle.Room.AppDatabase;
 import com.example.gongtia.lifestyle.Room.WeatherDataEntity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,36 +30,39 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.example.gongtia.lifestyle.Room.WeatherData;
+import com.example.gongtia.lifestyle.activity.LoginActivity;
 
 public class WeatherRepository {
-    MutableLiveData<WeatherData> jsonData = new MutableLiveData<WeatherData>();
+    MutableLiveData<List<WeatherData>> jsonData = new MutableLiveData<List<WeatherData>>();
     private Activity mActivity;
 
-   public WeatherRepository(Application application) {
+    public WeatherRepository(Application application) {
 
     }
 
     public void setActivity(Activity activity) {
         mActivity = activity;
-        if (mActivity!= null) {
+        if (mActivity != null) {
             loadData();
         }
 
     }
 
-    public MutableLiveData<WeatherData> getData() {
-        return  jsonData;
+    public MutableLiveData<List<WeatherData>> getData() {
+        return jsonData;
     }
 
     @SuppressLint("StaticFieldLeak")
     private void loadData() {
-        new AsyncTask<Void, Void, WeatherData>() {
+        new AsyncTask<Void, Void, List<WeatherData>>() {
 
 
             @Override
-            protected WeatherData doInBackground(Void... voids) {
+            protected List<WeatherData> doInBackground(Void... voids) {
                 Location location = getLocation(mActivity);
-                WeatherData wd = null;
+
+                List<WeatherData> wd = null;
+
                 try {
                     wd = getWeather(location);
                 } catch (IOException e) {
@@ -71,14 +74,14 @@ public class WeatherRepository {
             }
 
             @Override
-            protected void onPostExecute(WeatherData weatherData) {
-                super.onPostExecute(weatherData);
-                jsonData.setValue(weatherData);
+            protected void onPostExecute(List<WeatherData> wdList) {
+                super.onPostExecute(wdList);
+                jsonData.setValue(wdList);
             }
         }.execute();
     }
 
-    public Location getLocation (Activity activity) {
+    public Location getLocation(Activity activity) {
 
         String serviceString = Context.LOCATION_SERVICE;
         LocationManager locationManager = (LocationManager) activity.getSystemService(serviceString);
@@ -86,7 +89,7 @@ public class WeatherRepository {
         String provider = LocationManager.GPS_PROVIDER;
 
         ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        if (ActivityCompat.checkSelfPermission( activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(activity, "quit", Toast.LENGTH_LONG).show();
             return null;
         }
@@ -94,14 +97,14 @@ public class WeatherRepository {
         return location;
     }
 
-    public WeatherData getWeather(Location location) throws IOException, JSONException {
+    public List<WeatherData> getWeather(Location location) throws IOException, JSONException {
         List<WeatherData> lw = new LinkedList<>();
         //Get location's Longitude and Latitude
         String lat = Double.toString(location.getLatitude());
-        String lon =Double.toString(location.getLongitude());
+        String lon = Double.toString(location.getLongitude());
 
         // Send Longitude and Latitude to weatherbit.io to get Weather information
-        String weatherURL = "https://api.weatherbit.io/v2.0/forecast/daily?lat=" + lat+"&lon="+lon + "&key=cd1c1aa25a414247a70a1450ba94a3d4";
+        String weatherURL = "https://api.weatherbit.io/v2.0/forecast/daily?lat=" + lat + "&lon=" + lon + "&key=cd1c1aa25a414247a70a1450ba94a3d4";
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
         //Remove strict for  don't run network operation on main thread
@@ -148,7 +151,8 @@ public class WeatherRepository {
         weatherData.weatherCode = weatherDes.optString("code");
         weatherData.winDirection = current.optString("wind_cdir_full");
         weatherData.windSpeed = current.optString("wind_spd") + "m/s";
-        Log.e("wr", "getWeather: Description"+ weatherData.description);
+
+        lw.add(weatherData);
 
         //Tomorrow information
         WeatherData weatherData1 = new WeatherData();
@@ -166,10 +170,10 @@ public class WeatherRepository {
         weatherData1.snow = current1.optString("snow");
         JSONObject weatherDes1 = current1.getJSONObject("weather");
         weatherData1.description = weatherDes1.optString("description");
-        weatherData1.weatherCode= weatherDes1.optString("code");
+        weatherData1.weatherCode = weatherDes1.optString("code");
         weatherData1.winDirection = current1.optString("wind_cdir_full");
         weatherData1.windSpeed = current1.optString("wind_spd") + "m/s";
-
+        lw.add(weatherData1);
         //Third day information
         JSONObject current2 = (JSONObject) arrData.get(2);
         if (current == null) {
@@ -186,23 +190,47 @@ public class WeatherRepository {
         weatherData2.snow = current2.optString("snow");
         JSONObject weatherDes2 = current2.getJSONObject("weather");
         weatherData2.description = weatherDes2.optString("description");
-        weatherData2.weatherCode= weatherDes2.optString("code");
-        weatherData2.winDirection= current2.optString("wind_cdir_full");
-        weatherData2.windSpeed= current2.optString("wind_spd") + "m/s";
+        weatherData2.weatherCode = weatherDes2.optString("code");
+        weatherData2.winDirection = current2.optString("wind_cdir_full");
+        weatherData2.windSpeed = current2.optString("wind_spd") + "m/s";
+        lw.add(weatherData2);
 
-//       Toast.makeText(this, weatherInfo, Toast.LENGTH_SHORT).show();
-        return weatherData;
+        return lw;
     }
 
 
     @SuppressLint("StaticFieldLeak")
-    public void saveDataToDB(WeatherDataEntity wd) {
+    public static void saveDataToDB(WeatherData wd) {
+        //Database operation must in another thread.
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... Voids) {
+
+                WeatherDataEntity wde = new WeatherDataEntity();
+                wde.cityName = wd.cityName;
+                wde.stateName = wd.stateName;
+                wde.date = wd.date;
+                wde.temperature = wd.temperature;
+                wde.maxTemperature = wd.maxTemperature;
+                wde.minTemperature = wd.minTemperature;
+                wde.snow = wd.snow;
+                wde.description = wd.description;
+                wde.weatherCode = wd.weatherCode;
+                wde.winDirection = wd.winDirection;
+                wde.windSpeed = wd.windSpeed;
+
+                LoginActivity.db.weatherDataDao().insertWeatherDataEntity(wde);
+                return null;
+            }
+        }.execute();
+    }
+
+    public static void clearAllInDB() {
         //Database operation must in another thread.
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                AppDatabase db = AppDatabase.getInstance(mActivity.getBaseContext());
-                db.weatherDataDao().insertWeatherDataEntity(wd);
+                LoginActivity.db.weatherDataDao().deleteAll();
                 return null;
             }
         }.execute();

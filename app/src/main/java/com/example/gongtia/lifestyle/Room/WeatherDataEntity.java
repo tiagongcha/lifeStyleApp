@@ -77,20 +77,20 @@ public class WeatherDataEntity {
     public void setTemperature(String temperature) {
         this.temperature = temperature;
     }
-    void setDid(int input) {
-        did = input;
+    public void setDid(int input) {
+        this.did = input;
     }
     public int getDid() {
         return did;
     }
-    void setCityName(String input){
-        cityName = input;
+    public void setCityName(String input){
+        this.cityName = input;
     }
     public String getCityName() {
         return cityName;
     }
-    void setStateName(String input) {
-        stateName = input;
+    public void setStateName(String input) {
+        this.stateName = input;
     }
     public String getStateName() {
         return stateName;

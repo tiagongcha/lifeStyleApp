@@ -23,4 +23,7 @@ public interface WeatherDataDao {
 
     @Query("select * from WeatherDataEntity" )
     List<WeatherDataEntity> getAll();
+
+    @Query("delete from WeatherDataEntity")
+    void deleteAll();
 }

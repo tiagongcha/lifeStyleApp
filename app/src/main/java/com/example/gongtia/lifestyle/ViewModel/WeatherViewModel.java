@@ -15,7 +15,7 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.List;
 
 public class WeatherViewModel extends AndroidViewModel {
-    private MutableLiveData<WeatherData> jsonData;
+    private MutableLiveData<List<WeatherData>> jsonData;
     private WeatherRepository mWeatherRepository;
 
     public WeatherViewModel(@NonNull Application application) {
@@ -28,7 +28,7 @@ public class WeatherViewModel extends AndroidViewModel {
         mWeatherRepository.setActivity(input);
     }
 
-    public LiveData<WeatherData> getData() {
+    public LiveData<List<WeatherData>> getData() {
         return jsonData;
     }
 }

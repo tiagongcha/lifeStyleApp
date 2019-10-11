@@ -9,9 +9,10 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.example.gongtia.lifestyle.Profile;
 import com.example.gongtia.lifestyle.R;
 
-@Database(entities = {WeatherDataEntity.class}, version = 1)
+@Database(entities = {WeatherDataEntity.class, ProfileTable.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String DATABASE_NAME = "LifeStyleDB";
@@ -41,5 +42,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
 
     public abstract WeatherDataDao weatherDataDao();
+
+    public abstract  ProfileDao profileDao();
 
 }

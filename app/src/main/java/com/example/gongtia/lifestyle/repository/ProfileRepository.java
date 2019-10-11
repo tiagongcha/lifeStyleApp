@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import com.example.gongtia.lifestyle.JSONProfileUtils;
 import com.example.gongtia.lifestyle.Profile;
 import com.example.gongtia.lifestyle.Room.ProfileDao;
-import com.example.gongtia.lifestyle.Room.ProfileRoomDatabase;
 import com.example.gongtia.lifestyle.Room.ProfileTable;
 import com.example.gongtia.lifestyle.model.User;
 
@@ -24,8 +23,8 @@ public class ProfileRepository {
     private String userJson;
 
     public ProfileRepository(Application application){
-        ProfileRoomDatabase db = ProfileRoomDatabase.getDatabase(application);
-        mProfileDao = db.profileDao();
+//        ProfileRoomDatabase db = ProfileRoomDatabase.getDatabase(application);
+//        mProfileDao = db.profileDao();
         loadData();
     }
 
