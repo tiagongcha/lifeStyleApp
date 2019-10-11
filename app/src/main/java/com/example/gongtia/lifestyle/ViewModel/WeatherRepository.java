@@ -1,4 +1,4 @@
-package com.example.gongtia.lifestyle.fragment;
+package com.example.gongtia.lifestyle.ViewModel;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -12,30 +12,26 @@ import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.MutableLiveData;
+
+import com.example.gongtia.lifestyle.Room.AppDatabase;
+import com.example.gongtia.lifestyle.Room.WeatherDataEntity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 import java.util.LinkedList;
 import java.util.List;
 
 
 public class WeatherRepository {
     MutableLiveData<WeatherData> jsonData = new MutableLiveData<WeatherData>();
-    private String mLongitude, mLatitude;
-    private Context mContext;
     private Activity mActivity;
 
     WeatherRepository(Application application) {
@@ -61,10 +57,10 @@ public class WeatherRepository {
 
             @Override
             protected WeatherData doInBackground(Void... voids) {
-                Location locatoin = getLocation(mActivity);
+                Location location = getLocation(mActivity);
                 WeatherData wd = null;
                 try {
-                    wd = getWeather(locatoin);
+                    wd = getWeather(location);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -114,7 +110,7 @@ public class WeatherRepository {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setConnectTimeout(3 * 1000);
         if (conn.getResponseCode() != 200) {
-            Toast.makeText(mContext, "请求url失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "请求url失败", Toast.LENGTH_SHORT).show();
             throw new RuntimeException("请求url失败");
         }
 
@@ -142,9 +138,9 @@ public class WeatherRepository {
             return null;
         }
         weatherData.date = "Today";
-        weatherData.temprature = current.optString("temp");
-        weatherData.maxTemprature = current.optString("max_temp");
-        weatherData.minTemprature = current.optString("min_temp");
+        weatherData.temperature = current.optString("temp");
+        weatherData.maxTemperature = current.optString("max_temp");
+        weatherData.minTemperature = current.optString("min_temp");
         weatherData.snow = current.optString("snow");
         JSONObject weatherDes = current.getJSONObject("weather");
         weatherData.description = weatherDes.optString("description");
@@ -163,9 +159,9 @@ public class WeatherRepository {
             return null;
         }
         weatherData1.date = "Tomorrow";
-        weatherData1.temprature = current1.optString("temp");
-        weatherData1.maxTemprature = current1.optString("max_temp");
-        weatherData1.minTemprature = current1.optString("min_temp");
+        weatherData1.temperature = current1.optString("temp");
+        weatherData1.maxTemperature = current1.optString("max_temp");
+        weatherData1.minTemperature = current1.optString("min_temp");
         weatherData1.snow = current1.optString("snow");
         JSONObject weatherDes1 = current1.getJSONObject("weather");
         weatherData1.description = weatherDes1.optString("description");
@@ -183,9 +179,9 @@ public class WeatherRepository {
         weatherData2.countryName = weatherRoot.optString("country_code");
         weatherData2.stateName = weatherRoot.optString("state_code");
         weatherData2.date = current2.optString("valid_date");
-        weatherData2.temprature = current2.optString("temp");
-        weatherData2.maxTemprature = current2.optString("max_temp");
-        weatherData2. minTemprature = current2.optString("min_temp");
+        weatherData2.temperature = current2.optString("temp");
+        weatherData2.maxTemperature = current2.optString("max_temp");
+        weatherData2.minTemperature = current2.optString("min_temp");
         weatherData2.snow = current2.optString("snow");
         JSONObject weatherDes2 = current2.getJSONObject("weather");
         weatherData2.description = weatherDes2.optString("description");
@@ -195,6 +191,20 @@ public class WeatherRepository {
 
 //       Toast.makeText(this, weatherInfo, Toast.LENGTH_SHORT).show();
         return weatherData;
+    }
+
+
+    @SuppressLint("StaticFieldLeak")
+    public void saveDataToDB(WeatherDataEntity wd) {
+        //Database operation must in another thread.
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                AppDatabase db = AppDatabase.getInstance(mActivity.getBaseContext());
+                db.weatherDataDao().insertWeatherDataEntity(wd);
+                return null;
+            }
+        }.execute();
     }
 
 

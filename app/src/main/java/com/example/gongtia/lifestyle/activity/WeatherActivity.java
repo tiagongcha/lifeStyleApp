@@ -6,6 +6,7 @@ import com.example.gongtia.lifestyle.R;
 import com.example.gongtia.lifestyle.fragment.WeatherInfoFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 public class WeatherActivity extends AppCompatActivity {
 
@@ -18,6 +19,7 @@ public class WeatherActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.main_container, new WeatherInfoFragment())
                     .commit();
+
         }
     }
 

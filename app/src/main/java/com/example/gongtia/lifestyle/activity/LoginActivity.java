@@ -1,6 +1,8 @@
 package com.example.gongtia.lifestyle.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gongtia.lifestyle.R;
+import com.example.gongtia.lifestyle.Room.AppDatabase;
+import com.example.gongtia.lifestyle.Room.WeatherDataEntity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -26,31 +30,49 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginBtn, signupBtn;
     private ProgressBar progressBar;
     private TextView tvSignup;
+    public AppDatabase db;
 
 
     private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        ImageView img= (ImageView) findViewById(R.id.heartImg);
+        ImageView img = (ImageView) findViewById(R.id.heartImg);
         img.setImageResource(R.drawable.heartsmall);
 
         mAuth = FirebaseAuth.getInstance();
 
         initializeUI();
 
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View v) {
                 loginUserAccount();
+
+                //Database operation must in another thread.
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        db = AppDatabase.getInstance(getBaseContext());
+                        WeatherDataEntity wd = new WeatherDataEntity();
+                        wd.cityName = "slc";
+                        wd.stateName = "UT";
+                        db.weatherDataDao().insertWeatherDataEntity(wd);
+                        return null;
+                    }
+                }.execute();
+
             }
         });
 
-        tvSignup.setOnClickListener(new View.OnClickListener(){
+        tvSignup.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Intent signupIntent = new Intent(LoginActivity.this, RegistrationActivity.class);
                 startActivity(signupIntent);
             }
@@ -78,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -87,8 +109,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);
-                        }
-                        else {
+                        } else {
                             Toast.makeText(getApplicationContext(), "Login failed! Please try again later", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
 

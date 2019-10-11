@@ -44,6 +44,9 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.1.1'
 //    androidTestImplementation 'androidx.test.ext:truth:1.1.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    implementation 'androidx.room:room-runtime:2.1.0'
+    annotationProcessor 'androidx.room:room-compiler:2.1.0'
 //    debugImplementation 'androidx.fragment:fragment-testing:1.1.0-alpha02'
 }
 apply plugin: 'com.google.gms.google-services'
