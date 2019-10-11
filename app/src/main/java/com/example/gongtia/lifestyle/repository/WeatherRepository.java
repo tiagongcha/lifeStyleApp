@@ -1,4 +1,4 @@
-package com.example.gongtia.lifestyle.fragment;
+package com.example.gongtia.lifestyle.repository;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -13,8 +13,8 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import com.example.gongtia.lifestyle.Room.WeatherData;
+
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.MutableLiveData;
 
@@ -38,7 +38,7 @@ public class WeatherRepository {
     private Context mContext;
     private Activity mActivity;
 
-    WeatherRepository(Application application) {
+   public WeatherRepository(Application application) {
 
     }
 

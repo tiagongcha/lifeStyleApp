@@ -1,4 +1,4 @@
-package com.example.gongtia.lifestyle.fragment;
+package com.example.gongtia.lifestyle.Room;
 
 public class WeatherData {
 
