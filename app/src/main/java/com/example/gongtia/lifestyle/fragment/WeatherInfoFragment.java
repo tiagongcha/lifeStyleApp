@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.gongtia.lifestyle.R;
-import com.example.gongtia.lifestyle.ViewModel.WeatherData;
+import com.example.gongtia.lifestyle.Room.WeatherData;
 import com.example.gongtia.lifestyle.ViewModel.WeatherViewModel;
 
 import org.json.JSONException;

@@ -60,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                     protected Void doInBackground(Void... voids) {
                         db = AppDatabase.getInstance(getBaseContext());
                         WeatherDataEntity wd = new WeatherDataEntity();
+                        wd.did= 1;
                         wd.cityName = "slc";
                         wd.stateName = "UT";
                         db.weatherDataDao().insertWeatherDataEntity(wd);

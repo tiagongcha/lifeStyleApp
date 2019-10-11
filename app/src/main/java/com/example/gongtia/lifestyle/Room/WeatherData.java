@@ -1,8 +1,4 @@
-<<<<<<< HEAD:app/src/main/java/com/example/gongtia/lifestyle/ViewModel/WeatherData.java
-package com.example.gongtia.lifestyle.ViewModel;
-=======
 package com.example.gongtia.lifestyle.Room;
->>>>>>> upstream/master:app/src/main/java/com/example/gongtia/lifestyle/Room/WeatherData.java
 
 public class WeatherData {
 
