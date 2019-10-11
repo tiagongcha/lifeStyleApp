@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RadioButton;
 
+import com.example.gongtia.lifestyle.JSONProfileUtils;
 import com.example.gongtia.lifestyle.Profile;
 import com.example.gongtia.lifestyle.R;
 import com.example.gongtia.lifestyle.model.User;
@@ -37,6 +38,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ybs.countrypicker.CountryPicker;
 import com.ybs.countrypicker.CountryPickerListener;
+
+import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import static android.app.Activity.RESULT_OK;
@@ -55,6 +58,7 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
     private ImageView mProfilePic;
 
     private User mUserProfile = new User();
+    private String userJson;
 
     private double weight, height;
     private boolean setCountry = false;
@@ -127,7 +131,11 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
             }
             case R.id.button_create_profile:{
                 if(validateInput()){
-                    storeUserProfile();
+                    try {
+                        storeUserProfile();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     Intent goalIntent = new Intent(getActivity(), GoalCreateActivity.class);
                     startActivity(goalIntent);
                 }
@@ -236,7 +244,7 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
 
 
     @Override
-    public void storeUserProfile(){
+    public void storeUserProfile() throws JSONException {
 //      name and age
         mUserProfile.setUserName(mUserName);
 
@@ -264,6 +272,7 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         mUserProfile.setUid(user.getUid());
         mDatabase.child(user.getUid()).setValue(mUserProfile);
+        userJson = JSONProfileUtils.storeProfileJSON(mUserProfile);
     }
 
 

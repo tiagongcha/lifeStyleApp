@@ -1,67 +1,49 @@
 package com.example.gongtia.lifestyle.fragment;
 
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-
-import android.os.StrictMode;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.gongtia.lifestyle.R;
-
-import org.json.JSONArray;
+import com.example.gongtia.lifestyle.Room.WeatherData;
+import com.example.gongtia.lifestyle.ViewModel.WeatherViewModel;
+import com.example.gongtia.lifestyle.repository.WeatherRepository;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-
-import static androidx.core.content.ContextCompat.getSystemService;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class WeatherInfoFragment extends Fragment {
     String cityName, stateName, countryName;
-    String temprature, minTemprature, maxTemprature;
-    String temprature1, minTemprature1, maxTemprature1;
-    String temprature2, minTemprature2, maxTemprature2;
+    String temperature, minTemperature, maxTemperature;
+    String temperature1, minTemperature1, maxTemperature1;
+    String temperature2, minTemprature2, maxTemperature2;
     String description, snow, windSpeed, winDirection;
     String description1, snow1, windSpeed1, winDirection1;
     String description2, snow2, windSpeed2, winDirection2;
-    String date, date1,date2;
-    String weatherCode, weatherCode1,weatherCode2;
+    String date, date1, date2;
+    String weatherCode, weatherCode1, weatherCode2;
     TextView dateTV, siteTV, descriptionTV, temperatureTV;
     TextView dateTV1, siteTV1, descriptionTV1, temperatureTV1;
     TextView dateTV2, siteTV2, descriptionTV2, temperatureTV2;
 
-    ImageView im, im1,im2;
+    ImageView im, im1, im2;
     HashMap<String, String> meMap = new HashMap<String, String>();
+    WeatherViewModel mWeatherViewModel;
+    Activity mActivity;
 
     public WeatherInfoFragment() {
         // Required empty public constructor
@@ -70,29 +52,51 @@ public class WeatherInfoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        String serviceString = Context.LOCATION_SERVICE;
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(serviceString);
-
-        String provider = LocationManager.GPS_PROVIDER;
-
-        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getActivity(), "quit", Toast.LENGTH_LONG).show();
-            return;
-        }
-        Location location = locationManager.getLastKnownLocation(provider);
-        try {
-            getWeather(location);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         setWeatherCode_Icon();
-//        Toast.makeText(getActivity(),weatherInfo,Toast.LENGTH_SHORT).show();
+        //Create the view model
+        mWeatherViewModel = ViewModelProviders.of(getActivity()).get(WeatherViewModel.class);
+
+        //Set the observer
+        mWeatherViewModel.getData().observe(this, nameObserver);
+
+        //Pass activity
+        mActivity = getActivity();
+        mWeatherViewModel.setActivity(mActivity);
+
     }
+
+    //Create an observer that watches the LiveData
+    final Observer<List<WeatherData>> nameObserver = new Observer<List<WeatherData>>() {
+        @SuppressLint("StaticFieldLeak")
+        @Override
+        public void onChanged(List<WeatherData> wdList) {
+            if (wdList.size() != 0) {
+                try {
+                    parseData(wdList);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                //Write data to local SQLite Database
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+
+                        WeatherRepository.clearAllInDB();
+                        for (WeatherData wd : wdList) {
+                          WeatherRepository.saveDataToDB(wd);
+                        }
+
+                        return null;
+                    }
+                }.execute();
+
+            } else {
+                Log.e("JRM", "onChanged: " + "weatherData is null");
+            }
+            setText();
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,110 +104,49 @@ public class WeatherInfoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_weather_info, container, false);
 
-
         return view;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setText(view);
-    }
 
-    void getWeather(Location location) throws IOException, JSONException {
-        //Get location's Longitude and Latitude
-        String lat = Double.toString(location.getLatitude());
-        String lon =Double.toString(location.getLongitude());
+    public void parseData(List<WeatherData> wdList) throws JSONException {
 
-        // Send Longitude and Latitude to weatherbit.io to get Weather information
-        String weatherURL = "https://api.weatherbit.io/v2.0/forecast/daily?lat=" + lat+"&lon="+lon + "&key=cd1c1aa25a414247a70a1450ba94a3d4";
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        cityName = wdList.get(0).cityName;
+        countryName = wdList.get(0).countryName;
+        stateName = wdList.get(0).stateName;
 
-        //Remove strict for  don't run network operation on main thread
-        StrictMode.setThreadPolicy(policy);
-        URL url = new URL(weatherURL);
+        date = wdList.get(0).date;
+        temperature = wdList.get(0).temperature;
+        maxTemperature = wdList.get(0).maxTemperature;
+        minTemperature = wdList.get(0).minTemperature;
+        snow = wdList.get(0).snow;
 
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setConnectTimeout(6 * 1000);
-        if (conn.getResponseCode() != 200) {
-            Toast.makeText(getActivity(), "请求url失败", Toast.LENGTH_SHORT).show();
-            throw new RuntimeException("请求url失败");
-        }
+        description = wdList.get(0).description;
+        weatherCode = wdList.get(0).weatherCode;
+        winDirection = wdList.get(0).winDirection;
+        windSpeed = wdList.get(0).windSpeed;
 
-        //Read Data from InputStream to String
-        BufferedReader r = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        StringBuilder total = new StringBuilder();
-        for (String line; (line = r.readLine()) != null; ) {
-            total.append(line).append('\n');
-        }
+        date1 = wdList.get(1).date;
+        temperature1 = wdList.get(1).temperature;
+        maxTemperature1 = wdList.get(1).maxTemperature;
+        minTemperature1 = wdList.get(1).minTemperature;
+        snow1 = wdList.get(1).snow;
 
-        String weatherJson = total.toString();
-        conn.disconnect();
-//        Toast.makeText(this, weatherJson, Toast.LENGTH_SHORT).show();
+        description1 = wdList.get(1).description;
+        weatherCode1 = wdList.get(1).weatherCode;
+        winDirection1 = wdList.get(1).winDirection;
+        windSpeed1 = wdList.get(1).windSpeed;
 
-        //Convert string to JsonObject and parse contents
-        JSONObject weatherRoot = new JSONObject(weatherJson);
-        JSONArray arrData = weatherRoot.getJSONArray("data");
-        cityName = weatherRoot.optString("city_name");
-        countryName = weatherRoot.optString("country_code");
-        stateName = weatherRoot.optString("state_code");
+        date2 = wdList.get(2).date;
+        temperature2 = wdList.get(2).temperature;
+        maxTemperature2 = wdList.get(2).maxTemperature;
+        minTemprature2 = wdList.get(2).minTemperature;
+        snow2 = wdList.get(2).snow;
 
-        //today information
-        JSONObject current = (JSONObject) arrData.get(0);
-        if (current == null) {
-            return;
-        }
-        date = "Today";
-        temprature = current.optString("temp");
-        maxTemprature = current.optString("max_temp");
-        minTemprature = current.optString("min_temp");
-        snow = current.optString("snow");
-        JSONObject weatherDes = current.getJSONObject("weather");
-        description = weatherDes.optString("description");
-        weatherCode = weatherDes.optString("code");
-        winDirection = current.optString("wind_cdir_full");
-        windSpeed = current.optString("wind_spd") + "m/s";
+        description2 = wdList.get(2).description;
+        weatherCode2 = wdList.get(2).weatherCode;
+        winDirection2 = wdList.get(2).winDirection;
+        windSpeed2 = wdList.get(2).windSpeed;
 
-
-        //Tomorrow information
-        JSONObject current1 = (JSONObject) arrData.get(1);
-        if (current == null) {
-            return;
-        }
-        date1 = "Tomorrow";
-        temprature1 = current1.optString("temp");
-        maxTemprature1 = current1.optString("max_temp");
-        minTemprature1 = current1.optString("min_temp");
-        snow1 = current1.optString("snow");
-        JSONObject weatherDes1 = current1.getJSONObject("weather");
-        description1 = weatherDes1.optString("description");
-        weatherCode1= weatherDes1.optString("code");
-        winDirection1 = current1.optString("wind_cdir_full");
-        windSpeed1 = current1.optString("wind_spd") + "m/s";
-
-        //Third day information
-        JSONObject current2 = (JSONObject) arrData.get(2);
-        if (current == null) {
-            return;
-        }
-        date2 = current2.optString("valid_date");
-        temprature2 = current2.optString("temp");
-        maxTemprature2 = current2.optString("max_temp");
-        minTemprature2 = current2.optString("min_temp");
-        snow2 = current2.optString("snow");
-        JSONObject weatherDes2 = current2.getJSONObject("weather");
-        description2 = weatherDes2.optString("description");
-        weatherCode2= weatherDes2.optString("code");
-        winDirection2= current2.optString("wind_cdir_full");
-        windSpeed2= current2.optString("wind_spd") + "m/s";
-
-//        weatherInfo ="Date:" + date + "\n" +"City:" + cityName + "\n"  +
-//                "Description:"+ description + "\n" +"Temprature:" + temprature +"\n" +
-//                "MaxTemp:" + maxTemprature +  "\n" + "MinTemp:" +minTemprature +  "\n"
-//                +"WindSpeed:" + windSpeed  + "\n" + "WindDiretion:"+ winDirection;
-
-        //        Toast.makeText(this, weatherInfo, Toast.LENGTH_SHORT).show();
-        return;
     }
 
     public void setWeatherCode_Icon() {
@@ -247,47 +190,45 @@ public class WeatherInfoFragment extends Fragment {
         meMap.put("900", "u00d");
     }
 
-    public void setText(View view) {
-        dateTV = view.findViewById(R.id.Date);
-        siteTV = view.findViewById(R.id.Site);
-        descriptionTV = view.findViewById(R.id.Description);
-        temperatureTV = view.findViewById(R.id.Temperature);
+    public void setText() {
+        dateTV = getActivity().findViewById(R.id.Date);
+        siteTV = getActivity().findViewById(R.id.Site);
+        descriptionTV = getActivity().findViewById(R.id.Description);
+        temperatureTV = getActivity().findViewById(R.id.Temperature);
         dateTV.setText(date);
         siteTV.setText(cityName + "/" + stateName);
-        descriptionTV.setText(description1);
-        temperatureTV.setText(Html.fromHtml(minTemprature + "<sup>o</sup>C" + " ~ " + maxTemprature + "<sup>o</sup>C"));
+        descriptionTV.setText(description);
+        temperatureTV.setText(Html.fromHtml(minTemperature + "<sup>o</sup>C" + " ~ " + maxTemperature + "<sup>o</sup>C"));
 
-        im = view.findViewById(R.id.Icon);
+        im = getActivity().findViewById(R.id.Icon);
         String s = meMap.get(weatherCode);
         int imID = this.getResources().getIdentifier(s, "drawable", getActivity().getPackageName());
         im.setImageResource(imID);
 
-
-
-        dateTV1 = view.findViewById(R.id.Date_TV_D2);
-        siteTV1 = view.findViewById(R.id.Site_TV_D2);
-        descriptionTV1 = view.findViewById(R.id.Description_D2);
-        temperatureTV1 = view.findViewById(R.id.Temperature_D2);
+        dateTV1 = getActivity().findViewById(R.id.Date_TV_D2);
+        siteTV1 = getActivity().findViewById(R.id.Site_TV_D2);
+        descriptionTV1 = getActivity().findViewById(R.id.Description_D2);
+        temperatureTV1 = getActivity().findViewById(R.id.Temperature_D2);
         dateTV1.setText(date1);
         siteTV1.setText(cityName + "/" + stateName);
         descriptionTV1.setText(description1);
-        temperatureTV1.setText(Html.fromHtml(minTemprature1 + "<sup>o</sup>C" + " ~ " + maxTemprature1 + "<sup>o</sup>C"));
+        temperatureTV1.setText(Html.fromHtml(minTemperature1 + "<sup>o</sup>C" + " ~ " + maxTemperature1 + "<sup>o</sup>C"));
 
-        im1 = view.findViewById(R.id.Icon_IV_D2);
+        im1 = getActivity().findViewById(R.id.Icon_IV_D2);
         String s1 = meMap.get(weatherCode1);
         int imID1 = this.getResources().getIdentifier(s1, "drawable", getActivity().getPackageName());
         im1.setImageResource(imID1);
 
-        dateTV2 = view.findViewById(R.id.Date_TV_D3);
-        siteTV2 = view.findViewById(R.id.Site_TV_D3);
-        descriptionTV2 = view.findViewById(R.id.Description_D3);
-        temperatureTV2 = view.findViewById(R.id.Temperature_D3);
+        dateTV2 = getActivity().findViewById(R.id.Date_TV_D3);
+        siteTV2 = getActivity().findViewById(R.id.Site_TV_D3);
+        descriptionTV2 = getActivity().findViewById(R.id.Description_D3);
+        temperatureTV2 = getActivity().findViewById(R.id.Temperature_D3);
         dateTV2.setText(date2);
         siteTV2.setText(cityName + "/" + stateName);
         descriptionTV2.setText(description2);
-        temperatureTV2.setText(Html.fromHtml(minTemprature2 + "<sup>o</sup>C" + " ~ " + maxTemprature2 + "<sup>o</sup>C"));
+        temperatureTV2.setText(Html.fromHtml(minTemprature2 + "<sup>o</sup>C" + " ~ " + maxTemperature2 + "<sup>o</sup>C"));
 
-        im2 = view.findViewById(R.id.Icon_IV_D3);
+        im2 = getActivity().findViewById(R.id.Icon_IV_D3);
         String s2 = meMap.get(weatherCode2);
         int imID2 = this.getResources().getIdentifier(s2, "drawable", getActivity().getPackageName());
         im2.setImageResource(imID2);
