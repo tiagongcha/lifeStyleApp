@@ -7,6 +7,8 @@ import com.example.gongtia.lifestyle.JSONProfileUtils;
 import com.example.gongtia.lifestyle.Profile;
 import com.example.gongtia.lifestyle.Room.ProfileDao;
 import com.example.gongtia.lifestyle.Room.ProfileTable;
+import com.example.gongtia.lifestyle.Room.WeatherDataEntity;
+import com.example.gongtia.lifestyle.activity.LoginActivity;
 import com.example.gongtia.lifestyle.model.User;
 
 import org.json.JSONException;
@@ -17,8 +19,8 @@ public class ProfileRepository {
     private final MutableLiveData<User> jsonData =
             new MutableLiveData<User>();
 //    primary key:
-    private String mUserName;
-    private String mJsonString;
+    private static String mUserName;
+    private static String mJsonString;
     private ProfileDao mProfileDao;
     private String userJson;
 
@@ -81,6 +83,19 @@ public class ProfileRepository {
             mAsyncTaskDao.insert(profileTables[0]);
             return null;
         }
+    }
+
+    public static void saveDataToDB(User user){
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... Voids) {
+
+                ProfileTable wde = new ProfileTable(mUserName, mJsonString);
+
+                LoginActivity.db.profileDao().insert(wde);
+                return null;
+            }
+        }.execute();
     }
 
 }
