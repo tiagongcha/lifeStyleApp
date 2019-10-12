@@ -86,11 +86,17 @@ public class ProfileRepository {
     }
 
     public static void saveDataToDB(User user){
+        String userJson = null;
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... Voids) {
+                try {
+                    String userJson = JSONProfileUtils.storeProfileJSON(user);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                ProfileTable wde = new ProfileTable(mUserName, mJsonString);
+                ProfileTable wde = new ProfileTable(mUserName, userJson);
 
                 LoginActivity.db.profileDao().insert(wde);
                 return null;
