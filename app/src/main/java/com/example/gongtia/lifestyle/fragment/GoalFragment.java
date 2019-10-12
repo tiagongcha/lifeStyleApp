@@ -1,8 +1,11 @@
 package com.example.gongtia.lifestyle.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gongtia.lifestyle.R;
+import com.example.gongtia.lifestyle.Room.WeatherData;
 import com.example.gongtia.lifestyle.ViewModel.GoalViewModel;
 import com.example.gongtia.lifestyle.model.User;
 import com.example.gongtia.lifestyle.activity.GoalEditActivity;
+import com.example.gongtia.lifestyle.repository.GoalRepository;
+import com.example.gongtia.lifestyle.repository.WeatherRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,7 +30,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import org.json.JSONException;
+
 import java.text.DecimalFormat;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,7 +51,6 @@ public class GoalFragment extends Fragment implements View.OnClickListener {
     private TextView mTvCurrentBMI, mTvCurrentCalories, mTvNewCalories, mTvBMIDes, mTvBMRDes;
     private Button mbtEdit;
     private GoalViewModel mGoalViewModel;
-    private User mUser;
 
     @Nullable
     @Override
@@ -57,19 +65,20 @@ public class GoalFragment extends Fragment implements View.OnClickListener {
         mbtEdit.setOnClickListener(this);
 
 
-        mGoalViewModel = ViewModelProviders.of(this).get(GoalViewModel.class);
-
-        mGoalViewModel.init();
+        mGoalViewModel = ViewModelProviders.of(getActivity()).get(GoalViewModel.class);
 
         mGoalViewModel.getUser().observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
-                setData();
+                if(user != null){
+                    setData(user);
+                }
             }
         });
 
         return view;
     }
+
 
     @Override
     public void onClick(View v) {
@@ -92,18 +101,17 @@ public class GoalFragment extends Fragment implements View.OnClickListener {
 //    }
 
 
-    private void setData(){
-        mUser = mGoalViewModel.getUser().getValue();
-        int currentCalories = mGoalViewModel.calcCurrentCalories();
-        int newCalories = mGoalViewModel.calcNewCalories();
-        int BMI = mGoalViewModel.calcBMI();
-        if((mUser.getSex().equals("Female") && currentCalories < 1000)
-                || (mUser.getSex().equals("Female") && newCalories < 1000)){
+    private void setData(User user){
+        int currentCalories = GoalRepository.calcCurrentCalories(user);
+        int newCalories = GoalRepository.calcNewCalories(user);
+        int BMI = GoalRepository.calcBMI(user);
+        if((user.getSex().equals("Female") && currentCalories < 1000)
+                || (user.getSex().equals("Female") && newCalories < 1000)){
             Toast.makeText(getActivity(), "Your calories intake is less than 1000 which is unhealthy", Toast.LENGTH_SHORT).show();
         }
 
-        if((mUser.getSex().equals("Male") && currentCalories < 1200)
-                || (mUser.getSex().equals("Male") && newCalories < 1200)){
+        if((user.getSex().equals("Male") && currentCalories < 1200)
+                || (user.getSex().equals("Male") && newCalories < 1200)){
             Toast.makeText(getActivity(), "Your calories intake is less than 1200 which is unhealthy", Toast.LENGTH_SHORT).show();
         }
 
