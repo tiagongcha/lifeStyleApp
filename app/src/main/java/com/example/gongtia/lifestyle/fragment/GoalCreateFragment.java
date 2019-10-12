@@ -19,6 +19,7 @@ import android.widget.RadioGroup;
 import com.example.gongtia.lifestyle.Goal;
 import com.example.gongtia.lifestyle.activity.HomeActivity;
 import com.example.gongtia.lifestyle.R;
+import com.example.gongtia.lifestyle.repository.GoalRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -26,7 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class GoalCreateFragment extends Fragment implements View.OnClickListener, Goal {
+public class GoalCreateFragment extends Fragment implements View.OnClickListener {
 
     private String mGoal, mLbs, mLifestyle;
     private String userId;
@@ -70,25 +71,19 @@ public class GoalCreateFragment extends Fragment implements View.OnClickListener
         mbtSubmit = view.findViewById(R.id.button_create_goal);
         mbtSubmit.setOnClickListener(this);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        userId = user.getUid();
         return view;
     }
 
     @Override
     public void onClick(View v) {
         if(validateLbs()){
-            storeUserGoal();
+            GoalRepository.updateGoal(mGoal, mLifestyle, mLbs);
 //           jump to home activity
             Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
             startActivity(homeIntent);
         }
     }
 
-    @Override
     public boolean validateLbs() {
         mGoal = rbGoal.getText().toString();
         mLifestyle = rbLifestyle.getText().toString();
@@ -112,12 +107,14 @@ public class GoalCreateFragment extends Fragment implements View.OnClickListener
         return true;
     }
 
-    @Override
-    public void storeUserGoal(){
-        mDatabase.child(userId).child("goal").setValue(mGoal);
-        mDatabase.child(userId).child("lifestyle").setValue(mLifestyle);
-        mDatabase.child(userId).child("lbs").setValue(mLbs);
-    }
+//    @Override
+//    public void storeUserGoal(){
+//        mDatabase = FirebaseDatabase.getInstance().getReference();
+//        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        mDatabase.child(userId).child("goal").setValue(mGoal);
+//        mDatabase.child(userId).child("lifestyle").setValue(mLifestyle);
+//        mDatabase.child(userId).child("lbs").setValue(mLbs);
+//    }
 
     @Override public void onResume() {
         super.onResume();

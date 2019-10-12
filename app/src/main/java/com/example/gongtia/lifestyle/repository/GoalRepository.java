@@ -33,6 +33,16 @@ public class GoalRepository {
         return user;
     }
 
+
+    public static void updateGoal(String mGoal, String mLifestyle, String mLbs){
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabase.child(userId).child("goal").setValue(mGoal);
+        mDatabase.child(userId).child("lifestyle").setValue(mLifestyle);
+        mDatabase.child(userId).child("lbs").setValue(mLbs);
+
+        }
+
     private void loadData(){
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         DatabaseReference mProfileReference = FirebaseDatabase.getInstance().getReference();
@@ -62,7 +72,7 @@ public class GoalRepository {
             BMR = 66 + (6.3 * user.getWeight()) + (12.9 * user.getHeight()) - (6.8 * user.getAge());
         }
 
-        if(user.getLifeStyle()!= null && user.getLifeStyle().equals("Active")){
+        if(user.getLifeStyle().equals("Active")){
             currentCalories = (int)(BMR * 1.75);
         }else{
             currentCalories = (int)(BMR * 1.2);
@@ -90,7 +100,7 @@ public class GoalRepository {
             BMR = 66 + (6.3 * goalWeight) + (12.9 * user.getHeight()) - (6.8 * user.getAge());
         }
 
-        if(user.getLifeStyle()!=null && user.getLifeStyle().equals("Active")){
+        if(user.getLifeStyle().equals("Active")){
             newCalories = (int) (BMR * 1.75);
         }else{
             newCalories = (int) (BMR * 1.2);

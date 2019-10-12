@@ -18,6 +18,7 @@ import com.example.gongtia.lifestyle.ViewModel.WeatherViewModel;
 import com.example.gongtia.lifestyle.activity.HomeActivity;
 import com.example.gongtia.lifestyle.R;
 import com.example.gongtia.lifestyle.model.User;
+import com.example.gongtia.lifestyle.repository.GoalRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,7 +33,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-public class GoalEditFragment extends Fragment implements View.OnClickListener, Goal {
+public class GoalEditFragment extends Fragment implements View.OnClickListener{
     private String mGoal, mLbs, mLifestyle;
 
     private RadioGroup rgGoal, rgLifestyle;
@@ -43,6 +44,8 @@ public class GoalEditFragment extends Fragment implements View.OnClickListener, 
     private DatabaseReference mProfileReference;
     private FirebaseAuth mAuth;
     private String userId;
+
+    private GoalViewModel mGoalViewModel;
 
 
     @Nullable
@@ -74,28 +77,39 @@ public class GoalEditFragment extends Fragment implements View.OnClickListener, 
         mbtSubmit.setOnClickListener(this);
 
 
-        mAuth = FirebaseAuth.getInstance();
-        mProfileReference = FirebaseDatabase.getInstance().getReference();
-        FirebaseUser user = mAuth.getCurrentUser();
-        userId = user.getUid();
+//        mAuth = FirebaseAuth.getInstance();
+//        mProfileReference = FirebaseDatabase.getInstance().getReference();
+//        FirebaseUser user = mAuth.getCurrentUser();
+//        userId = user.getUid();
+//
+//
+//        ValueEventListener mListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                etLbs.setText(dataSnapshot.child(userId).getValue(User.class).getLbs());
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        };
+//        mProfileReference.addValueEventListener(mListener);
 
+        mGoalViewModel = ViewModelProviders.of(getActivity()).get(GoalViewModel.class);
 
-        ValueEventListener mListener = new ValueEventListener() {
+        mGoalViewModel.getUser().observe(this, new Observer<User>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                etLbs.setText(dataSnapshot.child(userId).getValue(User.class).getLbs());
+            public void onChanged(User user) {
+                if(user != null){
+                    etLbs.setText(user.getLbs());
+                }
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        };
-        mProfileReference.addValueEventListener(mListener);
+        });
 
         return view;
     }
 
-    @Override
+
     public boolean validateLbs() {
         mGoal = rbGoal.getText().toString();
         mLifestyle = rbLifestyle.getText().toString();
@@ -123,20 +137,22 @@ public class GoalEditFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onClick(View v) {
         if(validateLbs()){
-            storeUserGoal();
+            GoalRepository.updateGoal(mGoal, mLifestyle, mLbs);
             Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
             startActivity(homeIntent);
         }
 
     }
 
-    @Override
-    public void storeUserGoal(){
-        DatabaseReference curRef = mProfileReference.child(userId);
-        curRef.child("goal").setValue(mGoal);
-        curRef.child("lifestyle").setValue(mLifestyle);
-        curRef.child("lbs").setValue(mLbs);
-    }
+//    @Override
+//    public void storeUserGoal(){
+//        mProfileReference = FirebaseDatabase.getInstance().getReference();
+//        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        DatabaseReference curRef = mProfileReference.child(userId);
+//        curRef.child("goal").setValue(mGoal);
+//        curRef.child("lifestyle").setValue(mLifestyle);
+//        curRef.child("lbs").setValue(mLbs);
+//    }
 
     @Override public void onResume() {
         super.onResume();
