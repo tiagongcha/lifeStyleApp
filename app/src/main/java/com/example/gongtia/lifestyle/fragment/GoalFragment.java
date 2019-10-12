@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gongtia.lifestyle.R;
+import com.example.gongtia.lifestyle.ViewModel.GoalViewModel;
 import com.example.gongtia.lifestyle.model.User;
 import com.example.gongtia.lifestyle.activity.GoalEditActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,21 +29,20 @@ import java.text.DecimalFormat;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 public class GoalFragment extends Fragment implements View.OnClickListener {
 
-    private DatabaseReference mProfileReference;
-    private FirebaseAuth mAuth;
-    private String userId;
-    private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+//    private DatabaseReference mProfileReference;
+//    private FirebaseAuth mAuth;
+//    private String userId;
+//    private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
     private TextView mTvCurrentBMI, mTvCurrentCalories, mTvNewCalories, mTvBMIDes, mTvBMRDes;
     private Button mbtEdit;
-
-    private double  mHeight, mWeight;
-    private int mAge;
-    private String mSex, mLifestyle, mGoal, mLbs;
-
+    private GoalViewModel mGoalViewModel;
+    private User mUser;
 
     @Nullable
     @Override
@@ -56,23 +56,17 @@ public class GoalFragment extends Fragment implements View.OnClickListener {
         mbtEdit = (Button) view.findViewById(R.id.button_edit_goal);
         mbtEdit.setOnClickListener(this);
 
-        mAuth = FirebaseAuth.getInstance();
-        mProfileReference = FirebaseDatabase.getInstance().getReference();
-        FirebaseUser user = mAuth.getCurrentUser();
-        userId = user.getUid();
 
-        ValueEventListener mListener = new ValueEventListener(){
+        mGoalViewModel = ViewModelProviders.of(this).get(GoalViewModel.class);
+
+        mGoalViewModel.init();
+
+        mGoalViewModel.getUser().observe(this, new Observer<User>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                getData(dataSnapshot);
+            public void onChanged(User user) {
                 setData();
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError){
-            }
-        };
-        mProfileReference.addValueEventListener(mListener);
+        });
 
         return view;
     }
@@ -83,82 +77,33 @@ public class GoalFragment extends Fragment implements View.OnClickListener {
         startActivity(editGoalIntent);
     }
 
-    /**
-     *
-     * @param dataSnapshot - snapshot of the entire database -> iterate snapshot
-     */
-    private void getData(@NonNull DataSnapshot dataSnapshot){
-       mHeight = Double.parseDouble("" + dataSnapshot.child(userId).getValue(User.class).getHeight());
-       mWeight = dataSnapshot.child(userId).getValue(User.class).getWeight();
-       mAge = dataSnapshot.child(userId).getValue(User.class).getAge();
-       mSex = dataSnapshot.child(userId).getValue(User.class).getSex();
-       mGoal = dataSnapshot.child(userId).getValue(User.class).getGoal();
-       mLbs = dataSnapshot.child(userId).getValue(User.class).getLbs();
-       mLifestyle = dataSnapshot.child(userId).getValue(User.class).getLbs();
-    }
+//    /**
+//     *
+//     * @param dataSnapshot - snapshot of the entire database -> iterate snapshot
+//     */
+//    private void getData(@NonNull DataSnapshot dataSnapshot){
+//       mHeight = Double.parseDouble("" + dataSnapshot.child(userId).getValue(User.class).getHeight());
+//       mWeight = dataSnapshot.child(userId).getValue(User.class).getWeight();
+//       mAge = dataSnapshot.child(userId).getValue(User.class).getAge();
+//       mSex = dataSnapshot.child(userId).getValue(User.class).getSex();
+//       mGoal = dataSnapshot.child(userId).getValue(User.class).getGoal();
+//       mLbs = dataSnapshot.child(userId).getValue(User.class).getLbs();
+//       mLifestyle = dataSnapshot.child(userId).getValue(User.class).getLbs();
+//    }
 
-
-    private double calcCurrentCalories(){
-        double currentCalories;
-        double BMR = 0;
-        if(mSex.equals("Female")){
-            BMR = 655 + (4.3 * mWeight) + (4.7 * mHeight) - (4.7 * mAge);
-        }else{
-            BMR = 66 + (6.3 * mWeight) + (12.9 * mHeight) - (6.8 * mAge);
-        }
-
-        if(mLifestyle.equals("Active")){
-            currentCalories = BMR * 1.75;
-        }else{
-            currentCalories = BMR * 1.2;
-        }
-        return currentCalories;
-    }
-
-    private double calcNewCalories(){
-        double goalWeight = 0;
-        double newCalories = 0;
-        double pounds = Double.parseDouble(mLbs);
-
-        if(mGoal.equals("Maintain")){
-            return calcCurrentCalories();
-        }
-
-        else if(mGoal.equals("Lose")){
-            goalWeight = mWeight - pounds;
-        }else{
-            goalWeight = mWeight + pounds;
-        }
-        double BMR = 0;
-        if(mSex.equals("Female")){
-            BMR = 655 + (4.3 * goalWeight) + (4.7 * mHeight) - (4.7 * mAge);
-        }else{
-            BMR = 66 + (6.3 * goalWeight) + (12.9 * mHeight) - (6.8 * mAge);
-        }
-
-        if(mLifestyle.equals("Active")){
-            newCalories = BMR * 1.75;
-        }else{
-            newCalories = BMR * 1.2;
-        }
-        return newCalories;
-    }
-
-
-    private double calcBMI(){
-        return 703 * mWeight / (mHeight * mHeight);
-    }
 
     private void setData(){
-        double BMI = calcBMI();
-        double currentCalories = calcCurrentCalories();
-        double newCalories = calcNewCalories();
-
-        if((mSex.equals("Female") && currentCalories < 1000) || (mSex.equals("Female") && newCalories < 1000)){
+        mUser = mGoalViewModel.getUser().getValue();
+        int currentCalories = mGoalViewModel.calcCurrentCalories();
+        int newCalories = mGoalViewModel.calcNewCalories();
+        int BMI = mGoalViewModel.calcBMI();
+        if((mUser.getSex().equals("Female") && currentCalories < 1000)
+                || (mUser.getSex().equals("Female") && newCalories < 1000)){
             Toast.makeText(getActivity(), "Your calories intake is less than 1000 which is unhealthy", Toast.LENGTH_SHORT).show();
         }
 
-        if((mSex.equals("Male") && currentCalories < 1200) || (mSex.equals("Male") && newCalories < 1200)){
+        if((mUser.getSex().equals("Male") && currentCalories < 1200)
+                || (mUser.getSex().equals("Male") && newCalories < 1200)){
             Toast.makeText(getActivity(), "Your calories intake is less than 1200 which is unhealthy", Toast.LENGTH_SHORT).show();
         }
 

@@ -13,6 +13,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.example.gongtia.lifestyle.Goal;
+import com.example.gongtia.lifestyle.ViewModel.GoalViewModel;
+import com.example.gongtia.lifestyle.ViewModel.WeatherViewModel;
 import com.example.gongtia.lifestyle.activity.HomeActivity;
 import com.example.gongtia.lifestyle.R;
 import com.example.gongtia.lifestyle.model.User;
@@ -27,6 +29,8 @@ import com.google.firebase.database.ValueEventListener;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 public class GoalEditFragment extends Fragment implements View.OnClickListener, Goal {
     private String mGoal, mLbs, mLifestyle;
@@ -39,6 +43,7 @@ public class GoalEditFragment extends Fragment implements View.OnClickListener, 
     private DatabaseReference mProfileReference;
     private FirebaseAuth mAuth;
     private String userId;
+
 
     @Nullable
     @Override
