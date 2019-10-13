@@ -8,6 +8,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.gongtia.lifestyle.R;
+import com.example.gongtia.lifestyle.ViewModel.ProfileViewModel;
 import com.example.gongtia.lifestyle.model.User;
 import com.example.gongtia.lifestyle.activity.ProfileEditActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -40,6 +43,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     private TextView mTvUserName, mTvAge, mTvSex, mTvCity, mTvCountry, mTvHeight, mTvWeight;
     private Button mbtEdit;
     private ImageView mProfilePic;
+    //    ADD VIEW MODEL:
+    private ProfileViewModel mProfileViewModel;
 
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
@@ -79,8 +84,25 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             }
         };
         mProfileReference.addValueEventListener(mListener);
+        //        ADD VIEW MODEL!!!!!!!
+        mProfileViewModel = ViewModelProviders.of(getActivity()).get(ProfileViewModel.class);
+//Set the observer
+        (mProfileViewModel.getData()).observe(this,nameObserver);
         return view;
     }
+
+    final Observer<User> nameObserver = new Observer<User>() {
+        @Override
+        public void onChanged(User user) {
+            if(user!=null){
+                mTvUserName.setText(user.getUserName());
+                mTvAge.setText("" + user.getAge());
+                mTvCity.setText(user.getCity());
+                mTvHeight.setText("" + user.getHeight());
+                mTvWeight.setText("" + user.getWeight());
+            }
+        }
+    };
 
     @Override
     public void onClick(View view) {

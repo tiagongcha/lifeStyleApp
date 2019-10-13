@@ -1,12 +1,15 @@
 package com.example.gongtia.lifestyle.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +21,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
+
 import com.example.gongtia.lifestyle.Profile;
 import com.example.gongtia.lifestyle.R;
+import com.example.gongtia.lifestyle.ViewModel.ProfileViewModel;
 import com.example.gongtia.lifestyle.model.User;
 import com.example.gongtia.lifestyle.activity.HomeActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -37,10 +45,16 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ybs.countrypicker.CountryPicker;
 import com.ybs.countrypicker.CountryPickerListener;
+
+import org.json.JSONException;
+
 import java.io.ByteArrayOutputStream;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -64,6 +78,9 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
     private String userId;
     private Uri url;
     private boolean setCountry = false;
+
+//    ADD VIEW MODEL:
+    private ProfileViewModel mProfileViewModel;
 
 
     @Override
@@ -123,9 +140,25 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
             etHeight.setText("" + savedInstanceState.getString("height_text"));
             etWeight.setText("" + savedInstanceState.get("weight_text"));
         }
-
+//        ADD VIEW MODEL!!!!!!!
+        mProfileViewModel = ViewModelProviders.of(getActivity()).get(ProfileViewModel.class);
+//Set the observer
+        (mProfileViewModel.getData()).observe(this,nameObserver);
         return view;
     }
+
+    final Observer<User> nameObserver = new Observer<User>() {
+        @Override
+        public void onChanged(User user) {
+            if(user!=null){
+                etUserName.setText(user.getUserName());
+                etAge.setText("" + user.getAge());
+                etCity.setText(user.getCity());
+                etHeight.setText("" + user.getHeight());
+                etWeight.setText("" + user.getWeight());
+            }
+        }
+    };
 
     private void populateDate(@NonNull DataSnapshot dataSnapshot) {
         etUserName.setText(dataSnapshot.child(userId).getValue(User.class).getUserName());
