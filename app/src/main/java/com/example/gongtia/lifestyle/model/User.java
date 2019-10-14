@@ -2,7 +2,7 @@ package com.example.gongtia.lifestyle.model;
 
 public class User {
     private String id;//key
-    private String userName, city, country, sex, goal, lbs, lifeStyle;
+    private String userName, city, country, sex, goal, lbs, lifestyle;
     private int age;
     private double height, weight;
 
@@ -81,8 +81,7 @@ public class User {
     public String getGoal(){ return this.goal;}
     public String getLbs() {return this.lbs;}
 
-    public void setLifeStyle(String lifeStyle){this.lifeStyle = lifeStyle;}
-    public String getLifeStyle(){return this.lifeStyle;}
-
+    public void setLifeStyle(String lifestyle){this.lifestyle = lifestyle;}
+    public String getLifeStyle(){ return this.lifestyle;}
 
 }
