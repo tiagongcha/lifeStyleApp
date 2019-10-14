@@ -72,7 +72,7 @@ public class GoalRepository {
             BMR = 66 + (6.3 * user.getWeight()) + (12.9 * user.getHeight()) - (6.8 * user.getAge());
         }
 
-        if(user.getLifeStyle().equals("Active")){
+        if(user.getLifeStyle() != null && user.getLifeStyle().equals("Active")){
             currentCalories = (int)(BMR * 1.75);
         }else{
             currentCalories = (int)(BMR * 1.2);
@@ -100,7 +100,7 @@ public class GoalRepository {
             BMR = 66 + (6.3 * goalWeight) + (12.9 * user.getHeight()) - (6.8 * user.getAge());
         }
 
-        if(user.getLifeStyle().equals("Active")){
+        if(user.getLifeStyle() != null && user.getLifeStyle().equals("Active")){
             newCalories = (int) (BMR * 1.75);
         }else{
             newCalories = (int) (BMR * 1.2);
