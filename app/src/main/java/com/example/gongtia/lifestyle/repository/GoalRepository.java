@@ -16,6 +16,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 
+import javax.security.auth.login.LoginException;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
@@ -52,7 +54,10 @@ public class GoalRepository {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 dataSet = dataSnapshot.child(userId).getValue(User.class);
-                user.setValue(dataSet);
+                user.postValue(dataSet);
+                Log.e("Goal", "onDataChange: " + dataSet.getLifeStyle() );
+                Log.e("Goal", "onDataChange: " + dataSet.getWeight() );
+                Log.e("Goal", "onDataChange: " + dataSet.getGoal() );
             }
 
             @Override
@@ -72,7 +77,7 @@ public class GoalRepository {
             BMR = 66 + (6.3 * user.getWeight()) + (12.9 * user.getHeight()) - (6.8 * user.getAge());
         }
 
-        if(user.getLifeStyle() != null && user.getLifeStyle().equals("Active")){
+        if(user.getLifeStyle().equals("Active")){
             currentCalories = (int)(BMR * 1.75);
         }else{
             currentCalories = (int)(BMR * 1.2);
@@ -100,7 +105,7 @@ public class GoalRepository {
             BMR = 66 + (6.3 * goalWeight) + (12.9 * user.getHeight()) - (6.8 * user.getAge());
         }
 
-        if(user.getLifeStyle() != null && user.getLifeStyle().equals("Active")){
+        if(user.getLifeStyle().equals("Active")){
             newCalories = (int) (BMR * 1.75);
         }else{
             newCalories = (int) (BMR * 1.2);
