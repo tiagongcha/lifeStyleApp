@@ -310,6 +310,7 @@ public class ProfileCreateFragment extends Fragment implements View.OnClickListe
         mUserProfile.setUid(user.getUid());
         mDatabase.child(user.getUid()).setValue(mUserProfile);
         userJson = JSONProfileUtils.storeProfileJSON(mUserProfile);
+        ProfileRepository.saveDataToDB(mUserProfile);
     }
 
 

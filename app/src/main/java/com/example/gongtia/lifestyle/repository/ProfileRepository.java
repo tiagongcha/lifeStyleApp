@@ -2,6 +2,7 @@ package com.example.gongtia.lifestyle.repository;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.gongtia.lifestyle.JSONProfileUtils;
 import com.example.gongtia.lifestyle.Room.ProfileDao;
@@ -82,17 +83,23 @@ public class ProfileRepository {
     }
 
     public static void saveDataToDB(User user){
-        String userJson = null;
+        Log.e("ProfileRepo", "user.name " + user.getUserName() );
+
+
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... Voids) {
+                String userJson = null;
                 try {
-                    String userJson = JSONProfileUtils.storeProfileJSON(user);
+                     userJson = JSONProfileUtils.storeProfileJSON(user);
+                    Log.e("ProfileRepo", "userJson " + userJson );
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                ProfileTable wde = new ProfileTable(mUserName, userJson);
+                ProfileTable wde = new ProfileTable(user.getUserName(), userJson);
+                Log.e("ProfileRepo", "PT: " + wde.userName );
 
                 LoginActivity.db.profileDao().insert(wde);
                 return null;

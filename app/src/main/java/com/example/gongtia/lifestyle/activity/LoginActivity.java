@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         img.setImageResource(R.drawable.heartsmall);
 
         mAuth = FirebaseAuth.getInstance();
+        db = AppDatabase.getInstance(getBaseContext());
 
         initializeUI();
 
@@ -56,13 +57,13 @@ public class LoginActivity extends AppCompatActivity {
                 loginUserAccount();
 
                 //Database operation must in another thread.
-                new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        db = AppDatabase.getInstance(getBaseContext());
-                        return null;
-                    }
-                }.execute();
+//                new AsyncTask<Void, Void, Void>() {
+//                    @Override
+//                    protected Void doInBackground(Void... voids) {
+//                        db = AppDatabase.getInstance(getBaseContext());
+//                        return null;
+//                    }
+//                }.execute();
 
             }
         });
