@@ -31,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginBtn, signupBtn;
     private ProgressBar progressBar;
     private TextView tvSignup;
-    public static AppDatabase db;
 
 
     private FirebaseAuth mAuth;
@@ -45,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
         img.setImageResource(R.drawable.heartsmall);
 
         mAuth = FirebaseAuth.getInstance();
-        db = AppDatabase.getInstance(getBaseContext());
 
         initializeUI();
 

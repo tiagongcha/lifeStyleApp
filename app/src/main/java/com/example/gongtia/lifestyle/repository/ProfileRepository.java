@@ -8,6 +8,7 @@ import com.example.gongtia.lifestyle.JSONProfileUtils;
 import com.example.gongtia.lifestyle.Room.ProfileDao;
 import com.example.gongtia.lifestyle.Room.ProfileTable;
 import com.example.gongtia.lifestyle.activity.LoginActivity;
+import com.example.gongtia.lifestyle.activity.WelcomeScreen;
 import com.example.gongtia.lifestyle.model.User;
 
 import org.json.JSONException;
@@ -101,7 +102,7 @@ public class ProfileRepository {
                 ProfileTable wde = new ProfileTable(user.getUserName(), userJson);
                 Log.e("ProfileRepo", "PT: " + wde.userName );
 
-                LoginActivity.db.profileDao().insert(wde);
+                WelcomeScreen.db.profileDao().insert(wde);
                 return null;
             }
         }.execute();

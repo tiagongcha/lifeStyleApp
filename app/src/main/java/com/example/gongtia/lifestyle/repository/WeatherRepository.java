@@ -31,6 +31,7 @@ import java.util.List;
 
 import com.example.gongtia.lifestyle.Room.WeatherData;
 import com.example.gongtia.lifestyle.activity.LoginActivity;
+import com.example.gongtia.lifestyle.activity.WelcomeScreen;
 
 public class WeatherRepository {
     MutableLiveData<List<WeatherData>> jsonData = new MutableLiveData<List<WeatherData>>();
@@ -219,7 +220,7 @@ public class WeatherRepository {
                 wde.winDirection = wd.winDirection;
                 wde.windSpeed = wd.windSpeed;
 
-                LoginActivity.db.weatherDataDao().insertWeatherDataEntity(wde);
+                WelcomeScreen.db.weatherDataDao().insertWeatherDataEntity(wde);
                 return null;
             }
         }.execute();
@@ -230,7 +231,7 @@ public class WeatherRepository {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                LoginActivity.db.weatherDataDao().deleteAll();
+                WelcomeScreen.db.weatherDataDao().deleteAll();
                 return null;
             }
         }.execute();
