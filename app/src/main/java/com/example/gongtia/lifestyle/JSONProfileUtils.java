@@ -20,6 +20,7 @@ public class JSONProfileUtils {
         jsonObject.put("lifestyle", user.getLifeStyle());
         jsonObject.put("lbs", user.getLbs());
 
+
         return jsonObject.toString();
     }
 

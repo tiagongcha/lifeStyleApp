@@ -9,10 +9,12 @@ import androidx.room.PrimaryKey;
 @Entity(tableName="goal_table")
 public class GoalTable {
 
-    @PrimaryKey
-    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    public int uID;
+
     @ColumnInfo(name = "userName")
-    private String userName;
+    public String userName;
+
 
     //    store json string in value col
     @NonNull

@@ -5,6 +5,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.gongtia.lifestyle.JSONProfileUtils;
+import com.example.gongtia.lifestyle.Room.GoalTable;
+import com.example.gongtia.lifestyle.Room.ProfileTable;
+import com.example.gongtia.lifestyle.activity.WelcomeScreen;
 import com.example.gongtia.lifestyle.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,7 +28,7 @@ public class GoalRepository {
 
     private final MutableLiveData<User> user =
             new MutableLiveData<>();
-    private User dataSet;
+    static private User dataSet;
 
     public GoalRepository (Application application) {
        loadData();
@@ -42,6 +45,7 @@ public class GoalRepository {
         mDatabase.child(userId).child("goal").setValue(mGoal);
         mDatabase.child(userId).child("lifestyle").setValue(mLifestyle);
         mDatabase.child(userId).child("lbs").setValue(mLbs);
+        saveDataToDB(dataSet);
         }
 
     private void loadData(){
@@ -111,5 +115,30 @@ public class GoalRepository {
 
     public static int calcBMI(User user){
         return (int) (703 * user.getWeight() / (user.getHeight() * user.getHeight()));
+    }
+
+    public static void saveDataToDB(User user){
+        Log.e("ProfileRepo", "user.name " + user.getUserName() );
+
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... Voids) {
+                String userJson = null;
+                try {
+                    userJson = JSONProfileUtils.storeProfileJSON(user);
+                    Log.e("ProfileRepo", "userJson " + userJson );
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                GoalTable wde = new GoalTable(user.getUserName(), userJson);
+                Log.e("ProfileRepo", "PT: " + wde.userName );
+
+                WelcomeScreen.db.goalDao().insert(wde);
+                return null;
+            }
+        }.execute();
     }
 }

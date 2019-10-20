@@ -45,4 +45,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract  ProfileDao profileDao();
 
+    public abstract  GoalDao goalDao();
+
+
 }
