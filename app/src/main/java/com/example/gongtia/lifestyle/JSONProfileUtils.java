@@ -15,6 +15,11 @@ public class JSONProfileUtils {
         jsonObject.put("country", user.getCountry());
         jsonObject.put("weight", user.getWeight()+"");
         jsonObject.put("height", user.getHeight()+"");
+
+        jsonObject.put("goal", user.getGoal());
+        jsonObject.put("lifestyle", user.getLifeStyle());
+        jsonObject.put("lbs", user.getLbs());
+
         return jsonObject.toString();
     }
 
@@ -29,6 +34,10 @@ public class JSONProfileUtils {
         user.setCountry(jsonObject.getString("country"));
         user.setWeight(Double.parseDouble(jsonObject.getString("weight")));
         user.setHeight(Double.parseDouble(jsonObject.getString("height")));
+
+        user.setGoal(jsonObject.getString("goal"));
+        user.setLifeStyle(jsonObject.getString("lifestyle"));
+        user.setLbs(jsonObject.getString("lbs"));
 
         return user;
     }

@@ -42,7 +42,6 @@ public class GoalRepository {
         mDatabase.child(userId).child("goal").setValue(mGoal);
         mDatabase.child(userId).child("lifestyle").setValue(mLifestyle);
         mDatabase.child(userId).child("lbs").setValue(mLbs);
-
         }
 
     private void loadData(){
@@ -55,9 +54,6 @@ public class GoalRepository {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 dataSet = dataSnapshot.child(userId).getValue(User.class);
                 user.postValue(dataSet);
-                Log.e("Goal", "onDataChange: " + dataSet.getLifeStyle() );
-                Log.e("Goal", "onDataChange: " + dataSet.getWeight() );
-                Log.e("Goal", "onDataChange: " + dataSet.getGoal() );
             }
 
             @Override
