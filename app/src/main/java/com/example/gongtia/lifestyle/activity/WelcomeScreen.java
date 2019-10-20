@@ -6,11 +6,15 @@ import android.os.Handler;
 import android.widget.ImageView;
 
 import com.example.gongtia.lifestyle.R;
+import com.example.gongtia.lifestyle.Room.AppDatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class WelcomeScreen extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 4000;
+    public static AppDatabase db;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -18,6 +22,9 @@ public class WelcomeScreen extends AppCompatActivity {
         setContentView(R.layout.activity_welcome_screen);
         ImageView img= (ImageView) findViewById(R.id.imageView);
         img.setImageResource(R.drawable.heart);
+
+        db = AppDatabase.getInstance(getBaseContext());
+
 
         new Handler().postDelayed(new Runnable() {
             @Override

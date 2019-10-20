@@ -31,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginBtn, signupBtn;
     private ProgressBar progressBar;
     private TextView tvSignup;
-    public static AppDatabase db;
 
 
     private FirebaseAuth mAuth;
@@ -56,13 +55,13 @@ public class LoginActivity extends AppCompatActivity {
                 loginUserAccount();
 
                 //Database operation must in another thread.
-                new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        db = AppDatabase.getInstance(getBaseContext());
-                        return null;
-                    }
-                }.execute();
+//                new AsyncTask<Void, Void, Void>() {
+//                    @Override
+//                    protected Void doInBackground(Void... voids) {
+//                        db = AppDatabase.getInstance(getBaseContext());
+//                        return null;
+//                    }
+//                }.execute();
 
             }
         });

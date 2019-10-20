@@ -30,6 +30,7 @@ import com.example.gongtia.lifestyle.R;
 import com.example.gongtia.lifestyle.ViewModel.ProfileViewModel;
 import com.example.gongtia.lifestyle.model.User;
 import com.example.gongtia.lifestyle.activity.HomeActivity;
+import com.example.gongtia.lifestyle.repository.ProfileRepository;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -81,6 +82,7 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
 
 //    ADD VIEW MODEL:
     private ProfileViewModel mProfileViewModel;
+    private User mLocalUser = new User();
 
 
     @Override
@@ -183,6 +185,8 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
             case R.id.button_update_profile:{
                 if(validateInput()){
                     storeUserProfile();
+
+                    ProfileRepository.saveDataToDB(mLocalUser);
                     Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
                     startActivity(homeIntent);
                 }
@@ -196,24 +200,32 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
     public void storeUserProfile() {
         DatabaseReference curRef = mProfileReference.child(userId);
         curRef.child("userName").setValue(mUserName);
+        mLocalUser.setUserName(mUserName);
+
         if(!mAge.matches("")){
             int age = Integer.parseInt(mAge);
             curRef.child("age").setValue(age);
+            mLocalUser.setAge(age);
         }
         if(!mCity.matches("")){
             curRef.child("city").setValue(mCity);
+            mLocalUser.setCity(mCity);
         }
 
         if(setCountry){
             curRef.child("country").setValue(mCountry);
+            mLocalUser.setCity(mCountry);
         }
         curRef.child("sex").setValue(mSex);
+        mLocalUser.setSex(mSex);
 
         if(!mHeight.matches("") && !mWeight.matches("")){
             double height = Double.parseDouble(mHeight);
             double weight = Double.parseDouble(mWeight);
             curRef.child("height").setValue(height);
             curRef.child("weight").setValue(weight);
+            mLocalUser.setWeight(weight);
+            mLocalUser.setHeight(height);
         }
     }
 

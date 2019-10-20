@@ -12,7 +12,7 @@ import androidx.room.Update;
 
 @Dao
 public interface ProfileDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     void insert(ProfileTable profileTable);
 
     @Delete

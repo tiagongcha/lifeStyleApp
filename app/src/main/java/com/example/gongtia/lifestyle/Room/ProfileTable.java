@@ -9,30 +9,43 @@ import androidx.room.PrimaryKey;
 @Entity(tableName="profile_table")
 public class ProfileTable {
 
-    @PrimaryKey
-    @NonNull
-    @ColumnInfo(name = "userName")
-    private String userName;
+    public String getUserName() {
+        return userName;
+    }
 
-//    store json string in value col
-    @NonNull
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getProfileJson() {
+        return profileJson;
+    }
+
+    public void setProfileJson(String profileJson) {
+        this.profileJson = profileJson;
+    }
+
+    public int getuID() {
+        return uID;
+    }
+
+    public void setuID(int uID) {
+        this.uID = uID;
+    }
+
+    @PrimaryKey(autoGenerate = true)
+    public int uID;
+
+    @ColumnInfo(name = "userName")
+    public String userName;
+
     @ColumnInfo(name = "profiledata")
-    private String profileJson;
+    public String profileJson;
 
     public ProfileTable(@NonNull String userName, @NonNull String profileJson){
         this.userName = userName;
         this.profileJson = profileJson;
     }
 
-    public void setUserName(String userName){
-        this.userName = userName;
-    }
 
-    public String getUserName(){
-        return userName;
-    }
-
-    public String getProfileJson(){
-        return profileJson;
-    }
 }
