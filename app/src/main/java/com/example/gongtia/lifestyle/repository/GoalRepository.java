@@ -118,7 +118,7 @@ public class GoalRepository {
     }
 
     public static void saveDataToDB(User user){
-        Log.e("ProfileRepo", "user.name " + user.getUserName() );
+//        Log.e("ProfileRepo", "user.name " + user.getUserName() );
 
 
         new AsyncTask<Void, Void, Void>() {
