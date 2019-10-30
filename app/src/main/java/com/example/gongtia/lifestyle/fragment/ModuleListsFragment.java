@@ -35,7 +35,6 @@ public class ModuleListsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_module_lists, container, false);
         m_RecyclerView = view.findViewById(R.id.rcycV_itemList);
-        //Tell Android that we know the size of the recyclerview doesn't change
         m_RecyclerView.setHasFixedSize(true);
 
         //Set the layout manager
@@ -46,12 +45,14 @@ public class ModuleListsFragment extends Fragment {
         ArrayList<ModuleButton> buttons = new ArrayList<>();
         buttons.add(new ModuleButton(ResourcesCompat.getDrawable(getResources(), R.drawable.c03d, null), "Weather"));
         buttons.add(new ModuleButton(ResourcesCompat.getDrawable(getResources(), R.drawable.hike, null), "Hiking"));
+        buttons.add(new ModuleButton(ResourcesCompat.getDrawable(getResources(), R.drawable.hike, null), "StepCount"));
+
         m_Adaptor = new MyRVAdapter(buttons);
         m_RecyclerView.setAdapter(m_Adaptor);
 
 
         if(!getResources().getBoolean(R.bool.isTablet)){
-            m_RecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            m_RecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         }else{
             m_RecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         }

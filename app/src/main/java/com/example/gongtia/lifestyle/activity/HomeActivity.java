@@ -48,8 +48,8 @@ public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnTra
     LocationListener locationListener;
     double latitude;
     double longitude;
-    private static final String KEY = "";
-    private static final String SECRET = "";
+    private static final String KEY = "AKIAV7GHWBCADY6NTPEZ";
+    private static final String SECRET = "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";
     private String sqlPath;
 
     @Override
@@ -68,7 +68,7 @@ public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnTra
             }
         }).execute();
 
-        sqlPath = this.getDatabasePath("LifeStyleDB").toString();
+        sqlPath = this.getDatabasePath("LifeStyleDB").getAbsolutePath();
         Log.e("sqlpath ", sqlPath);
 
         uploadWithTransferUtility();
@@ -132,7 +132,15 @@ public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnTra
             case 1:
                 hikingButtonHandler();
                 break;
+            case 2:
+                stepCountButtonHandler();
+                break;
         }
+    }
+
+    private void stepCountButtonHandler(){
+        Intent stepIntent = new Intent(this, StepCounterActivity.class);
+        startActivity(stepIntent);
     }
 
     private void hikingButtonHandler() {
@@ -212,7 +220,7 @@ public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnTra
                 transferUtility.upload(
                         "gongtia" + sqlPath,
                         new File(sqlPath));
-        
+
         // Attach a listener to the observer to get state update and progress notifications
         uploadObserver.setTransferListener(new TransferListener() {
 

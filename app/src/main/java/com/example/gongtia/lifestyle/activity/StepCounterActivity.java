@@ -63,11 +63,11 @@ public class StepCounterActivity extends AppCompatActivity {
                    counter_Guestures++;
                    if(counter_Guestures%2 == 1){
                        //To do start step counter
-//                       Toast.makeText(getBaseContext(), "Gesture 1", Toast.LENGTH_SHORT).show();
+                       Toast.makeText(getBaseContext(), "Gesture 1", Toast.LENGTH_SHORT).show();
                    }
                    else {
                        //To to stop step counter
-//                       Toast.makeText(getBaseContext(), "Gesture 0", Toast.LENGTH_SHORT).show();
+                       Toast.makeText(getBaseContext(), "Gesture 0", Toast.LENGTH_SHORT).show();
 
                    }
 

@@ -45,7 +45,8 @@ public class GoalRepository {
         mDatabase.child(userId).child("goal").setValue(mGoal);
         mDatabase.child(userId).child("lifestyle").setValue(mLifestyle);
         mDatabase.child(userId).child("lbs").setValue(mLbs);
-        saveDataToDB(dataSet);
+
+//        saveDataToDB(dataSet);
         }
 
     private void loadData(){
