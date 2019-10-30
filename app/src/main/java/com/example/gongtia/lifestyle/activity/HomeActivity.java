@@ -216,6 +216,9 @@ public class HomeActivity extends AppCompatActivity implements MyRVAdapter.OnTra
                         .s3Client(s3Client)
                         .build();
 
+        File s = new File(sqlPath);
+        if(!s.exists()){return;}
+
         TransferObserver uploadObserver =
                 transferUtility.upload(
                         "gongtia" + sqlPath,
