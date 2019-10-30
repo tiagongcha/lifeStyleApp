@@ -10,37 +10,128 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/stepcounterCV"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:cardBackgroundColor="#FF9800">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/todayDate"
-                android:layout_width="wrap_content"
+                android:id="@+id/stepCounterTitle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/d1_date" />
+                android:gravity="center_horizontal"
+                android:text="Step Counter"
+                android:textSize="32dp"
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/stepcounterET"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="steps" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="16dp"
+                android:background="#FF9800"
+                android:orientation="horizontal"
+                android:textSize="24sp">
+
+                <TextView
+                    android:id="@+id/todayDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="@string/d1_date"
+                    android:textSize="24dp" />
+
+                <TextView
+                    android:id="@+id/stepcounterET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="0"
+                    android:textSize="24dp" />
+
+                <TextView
+                    android:id="@+id/stepsTag"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:text="Steps"
+                    android:textSize="24dp" />
+            </LinearLayout>
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/stephistory"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:cardBackgroundColor="#FFEB3B">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/stephisRV"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/stepHisTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Step Counter Records"
+                android:textSize="32dp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/idTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="Num."
+                    android:textStyle="bold"
+                    android:textSize="18dp"/>
+
+                <TextView
+                    android:id="@+id/dateTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="Date"
+                    android:textStyle="bold"
+                    android:textSize="18dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="Steps"
+                    android:textStyle="bold"
+                    android:textSize="18dp"/>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/stephisRV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 </LinearLayout>
