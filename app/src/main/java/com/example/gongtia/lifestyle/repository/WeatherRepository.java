@@ -5,14 +5,20 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.gongtia.lifestyle.Room.WeatherDataEntity;
@@ -36,6 +42,8 @@ import com.example.gongtia.lifestyle.activity.WelcomeScreen;
 public class WeatherRepository {
     MutableLiveData<List<WeatherData>> jsonData = new MutableLiveData<List<WeatherData>>();
     private Activity mActivity;
+    double latitude;
+    double longitude;
 
     public WeatherRepository(Application application) {
 
@@ -60,12 +68,12 @@ public class WeatherRepository {
 
             @Override
             protected List<WeatherData> doInBackground(Void... voids) {
-                Location location = getLocation(mActivity);
+//                Location location = getLocation(mActivity);
 
                 List<WeatherData> wd = null;
 
                 try {
-                    wd = getWeather(location);
+                    wd = getWeather();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -82,27 +90,40 @@ public class WeatherRepository {
         }.execute();
     }
 
-    public Location getLocation(Activity activity) {
 
-        String serviceString = Context.LOCATION_SERVICE;
-        LocationManager locationManager = (LocationManager) activity.getSystemService(serviceString);
-
-        String provider = LocationManager.GPS_PROVIDER;
-
-        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(activity, "quit", Toast.LENGTH_LONG).show();
-            return null;
-        }
-        Location location = locationManager.getLastKnownLocation(provider);
-        return location;
-    }
-
-    public List<WeatherData> getWeather(Location location) throws IOException, JSONException {
+    public List<WeatherData> getWeather() throws IOException, JSONException {
         List<WeatherData> lw = new LinkedList<>();
         //Get location's Longitude and Latitude
-        String lat = Double.toString(location.getLatitude());
-        String lon = Double.toString(location.getLongitude());
+
+
+
+        LocationManager locationManager = (LocationManager) mActivity.getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+
+        String lat = Double.toString(latitude);
+        String lon = Double.toString(longitude);
 
         // Send Longitude and Latitude to weatherbit.io to get Weather information
         String weatherURL = "https://api.weatherbit.io/v2.0/forecast/daily?lat=" + lat + "&lon=" + lon + "&key=cd1c1aa25a414247a70a1450ba94a3d4";

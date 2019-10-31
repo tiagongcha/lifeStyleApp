@@ -7,6 +7,8 @@ import android.widget.ImageView;
 
 import com.example.gongtia.lifestyle.R;
 import com.example.gongtia.lifestyle.Room.AppDatabase;
+import com.example.gongtia.lifestyle.Room.WeatherData;
+import com.example.gongtia.lifestyle.repository.WeatherRepository;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,6 +26,11 @@ public class WelcomeScreen extends AppCompatActivity {
         img.setImageResource(R.drawable.heart);
 
         db = AppDatabase.getInstance(getBaseContext());
+
+        WeatherData wd = new WeatherData();
+        wd.cityName = "Salt Lake City";
+
+        WeatherRepository.saveDataToDB(wd);
 
 
         new Handler().postDelayed(new Runnable() {

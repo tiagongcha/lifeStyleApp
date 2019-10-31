@@ -63,10 +63,13 @@ public class StepCounterActivity extends AppCompatActivity {
 
 
     public void initStepsList() {
+        if (mStepsList.size()>0)
+            mStepsList.clear();
 
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... Voids) {
+
                 List<StepCounterData> msls = WelcomeScreen.db.StepCounterDao().getAll();
                 for (StepCounterData scd : msls) {
                     Log.e("SCA", "doInBackground: " + scd.date + " / " + scd.steps);
@@ -168,7 +171,7 @@ public class StepCounterActivity extends AppCompatActivity {
 
                     } else {
                         //To to stop step counter
-                        if (mStepCounter != null) {
+                        if (mStepCounter != null && stepsInt != 0) {
                             Log.e("SCA", "SC end: " + "------------");
                             Toast.makeText(getBaseContext(), "Step Counter Ended", Toast.LENGTH_SHORT).show();
                             mSensorManager.unregisterListener(mSCListener);
@@ -189,6 +192,14 @@ public class StepCounterActivity extends AppCompatActivity {
                                 }
                             }.execute();
 
+                            initStepsList();
+
+                            RecyclerView rv = findViewById(R.id.stephisRV);
+                            LinearLayoutManager lm = new LinearLayoutManager(getBaseContext());
+                            rv.setLayoutManager(lm);
+                            StepCounterRVAdapter scRVA = new StepCounterRVAdapter(mStepsList);
+
+                            rv.setAdapter(scRVA);
 
                         }
                     }
